@@ -3,13 +3,26 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package redis
+//package redis
+//
+//import (
+//	"fmt"
+//	"github.com/edgexfoundry/edgex-go/internal/pkg/db"
+//	redisClient "github.com/edgexfoundry/edgex-go/internal/pkg/db/redis"
+//	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
+//	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+//	model "github.com/edgexfoundry/go-mod-core-contracts/v2/models"
+//	"github.com/google/uuid"
+//)
+
+package rocks
 
 import (
 	"fmt"
 
 	"github.com/edgexfoundry/edgex-go/internal/pkg/db"
-	redisClient "github.com/edgexfoundry/edgex-go/internal/pkg/db/redis"
+	// redisClient "github.com/edgexfoundry/edgex-go/internal/pkg/db/redis"
+	rocksClient "github.com/edgexfoundry/edgex-go/internal/pkg/db/rocks"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	model "github.com/edgexfoundry/go-mod-core-contracts/v2/models"
@@ -17,15 +30,19 @@ import (
 	"github.com/google/uuid"
 )
 
+//type Client struct {
+//	*redisClient.Client
+//	loggingClient logger.LoggingClient
+//}
 type Client struct {
-	*redisClient.Client
+	*rocksClient.Client
 	loggingClient logger.LoggingClient
 }
 
 func NewClient(config db.Configuration, logger logger.LoggingClient) (*Client, errors.EdgeX) {
 	var err error
 	dc := &Client{}
-	dc.Client, err = redisClient.NewClient(config, logger)
+	dc.Client, err = rocksClient.NewClient(config, logger)
 	dc.loggingClient = logger
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindDatabaseError, "redis client creation failed", err)

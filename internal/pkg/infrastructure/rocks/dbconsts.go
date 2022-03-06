@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package redis
+package rocks
 
 // Redis commmands used in this project
 // Reference: https://redis.io/commands

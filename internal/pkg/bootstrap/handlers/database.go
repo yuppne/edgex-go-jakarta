@@ -15,6 +15,7 @@ import (
 	"github.com/edgexfoundry/edgex-go/internal/pkg/db"
 	"github.com/edgexfoundry/edgex-go/internal/pkg/infrastructure/redis"
 	"github.com/edgexfoundry/edgex-go/internal/pkg/interfaces"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/infrastructure/rocks"
 
 	bootstrapContainer "github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/secret"
@@ -60,9 +61,14 @@ func (d Database) newDBClient(
 				Password: credentials.Password,
 			},
 			lc)
-	//case "rockdb":
-	//	return rocks.NewClient(
-	//		)
+	case "rockdb":
+		return rocks.NewClient(
+			db.Configuration{
+				Host:     databaseInfo.Host,
+				Port:     databaseInfo.Port,
+				Password: credentials.Password,
+			},
+			lc)
 	default:
 		return nil, db.ErrUnsupportedDatabase
 	}
