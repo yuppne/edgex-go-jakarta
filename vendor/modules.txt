@@ -71,7 +71,7 @@ github.com/edgexfoundry/go-mod-secrets/v2/secrets
 github.com/edgexfoundry/go-mod-secrets/v2/secrets/mocks
 # github.com/fatih/color v1.9.0
 github.com/fatih/color
-# github.com/fxamacker/cbor/v2 v2.3.0
+# github.com/fxamacker/cbor/v2 v2.4.0
 ## explicit
 github.com/fxamacker/cbor/v2
 # github.com/go-kit/kit v0.11.0
