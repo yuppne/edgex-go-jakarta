@@ -60,6 +60,9 @@ func (d Database) newDBClient(
 				Password: credentials.Password,
 			},
 			lc)
+	//case "rockdb":
+	//	return rocks.NewClient(
+	//		)
 	default:
 		return nil, db.ErrUnsupportedDatabase
 	}
