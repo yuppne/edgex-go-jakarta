@@ -20,7 +20,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 
-	"github.com/edgexfoundry/edgex-go/internal/system/agent/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/system/agent/config"
 )
 
 type metrics struct {

@@ -12,7 +12,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 
-	"github.com/edgexfoundry/edgex-go/internal/core/data/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/data/container"
 )
 
 // ReadingTotalCount return the count of all of readings currently stored in the database and error if any

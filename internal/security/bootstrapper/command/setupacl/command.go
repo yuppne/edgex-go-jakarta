@@ -32,11 +32,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/edgexfoundry/edgex-go/internal"
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/command/setupacl/share"
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/config"
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/helper"
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/interfaces"
+	"github.com/yuppne/edgex-go-jakarta/internal"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/command/setupacl/share"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/helper"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/interfaces"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/startup"
 

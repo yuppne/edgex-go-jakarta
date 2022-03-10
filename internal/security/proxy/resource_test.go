@@ -20,7 +20,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/proxy/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/proxy/config"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 )

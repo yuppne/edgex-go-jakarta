@@ -22,7 +22,7 @@ package main
 import (
 	"context"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/secretstore"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/secretstore"
 )
 
 func main() {

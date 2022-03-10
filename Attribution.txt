@@ -1,5 +1,5 @@
 This file contains the open source projects that are referenced by the EdgeX Foundry Go services.
-As there are many Go services, this list is a union of all open source projects used by all the EdgeX Go services (found in https://github.com/edgexfoundry/edgex-go).
+As there are many Go services, this list is a union of all open source projects used by all the EdgeX Go services (found in https://github.com/yuppne/edgex-go-jakarta).
 Not all projects listed are used by each service.
 
 pkg/errors (BSD-2) https://github.com/pkg/errors

@@ -21,10 +21,10 @@ import (
 	"context"
 	"os"
 
-	"github.com/edgexfoundry/edgex-go/internal"
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/redis/config"
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/redis/container"
-	redisHandlers "github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/redis/handlers"
+	"github.com/yuppne/edgex-go-jakarta/internal"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/redis/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/redis/container"
+	redisHandlers "github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/redis/handlers"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/flags"

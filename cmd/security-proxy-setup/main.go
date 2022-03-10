@@ -18,7 +18,7 @@ package main
 import (
 	"context"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/proxy"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/proxy"
 )
 
 func main() {

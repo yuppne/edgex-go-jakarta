@@ -30,10 +30,10 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 
-	"github.com/edgexfoundry/edgex-go/internal"
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/helper"
-	"github.com/edgexfoundry/edgex-go/internal/security/proxy/models"
 	"github.com/edgexfoundry/go-mod-secrets/v2/pkg/token/fileioperformer"
+	"github.com/yuppne/edgex-go-jakarta/internal"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/helper"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/proxy/models"
 )
 
 const (

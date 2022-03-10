@@ -9,8 +9,8 @@ package mocks
 import (
 	"testing"
 
-	. "github.com/edgexfoundry/edgex-go/internal/security/kdf"
 	"github.com/stretchr/testify/assert"
+	. "github.com/yuppne/edgex-go-jakarta/internal/security/kdf"
 )
 
 func TestMockInterfaceType(t *testing.T) {

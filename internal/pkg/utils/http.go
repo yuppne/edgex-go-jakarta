@@ -14,8 +14,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/edgexfoundry/edgex-go/internal/pkg"
-	"github.com/edgexfoundry/edgex-go/internal/pkg/correlation"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/correlation"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"

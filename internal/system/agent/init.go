@@ -23,10 +23,10 @@ import (
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"
 	"github.com/gorilla/mux"
 
-	"github.com/edgexfoundry/edgex-go/internal/system/agent/application"
-	"github.com/edgexfoundry/edgex-go/internal/system/agent/application/direct"
-	"github.com/edgexfoundry/edgex-go/internal/system/agent/application/executor"
-	"github.com/edgexfoundry/edgex-go/internal/system/agent/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/system/agent/application"
+	"github.com/yuppne/edgex-go-jakarta/internal/system/agent/application/direct"
+	"github.com/yuppne/edgex-go-jakarta/internal/system/agent/application/executor"
+	"github.com/yuppne/edgex-go-jakarta/internal/system/agent/container"
 )
 
 // Bootstrap contains references to dependencies required by the BootstrapHandler.

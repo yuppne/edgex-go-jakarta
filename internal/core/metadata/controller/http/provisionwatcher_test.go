@@ -26,8 +26,8 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	"github.com/edgexfoundry/edgex-go/internal/core/metadata/container"
-	"github.com/edgexfoundry/edgex-go/internal/core/metadata/infrastructure/interfaces/mocks"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/metadata/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/metadata/infrastructure/interfaces/mocks"
 )
 
 var testProvisionWatcherName = "TestProvisionWatcher"

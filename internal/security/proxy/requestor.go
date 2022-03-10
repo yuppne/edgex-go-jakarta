@@ -22,7 +22,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/edgexfoundry/edgex-go/internal"
+	"github.com/yuppne/edgex-go-jakarta/internal"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 )

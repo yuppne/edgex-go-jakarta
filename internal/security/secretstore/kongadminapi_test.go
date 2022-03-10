@@ -4,10 +4,10 @@ import (
 	"os"
 	"testing"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/secretstore/config"
-	"github.com/edgexfoundry/edgex-go/internal/security/secretstore/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"
 	"github.com/stretchr/testify/assert"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/secretstore/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/secretstore/container"
 )
 
 func TestKongAdminAPI_Setup(t *testing.T) {

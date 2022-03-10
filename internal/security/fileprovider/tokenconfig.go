@@ -50,7 +50,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/secretstore"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/secretstore"
 	"github.com/edgexfoundry/go-mod-secrets/v2/pkg/token/fileioperformer"
 )
 

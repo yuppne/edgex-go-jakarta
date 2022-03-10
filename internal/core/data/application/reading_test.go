@@ -4,14 +4,14 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/edgexfoundry/edgex-go/internal/core/data/container"
-	dbMock "github.com/edgexfoundry/edgex-go/internal/core/data/infrastructure/interfaces/mocks"
-	"github.com/edgexfoundry/edgex-go/internal/core/data/mocks"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/data/container"
+	dbMock "github.com/yuppne/edgex-go-jakarta/internal/core/data/infrastructure/interfaces/mocks"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/data/mocks"
 )
 
 func TestAllReadings(t *testing.T) {

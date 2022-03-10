@@ -14,8 +14,8 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 
-	"github.com/edgexfoundry/edgex-go/internal/system/agent/interfaces"
-	"github.com/edgexfoundry/edgex-go/internal/system/agent/response"
+	"github.com/yuppne/edgex-go-jakarta/internal/system/agent/interfaces"
+	"github.com/yuppne/edgex-go-jakarta/internal/system/agent/response"
 )
 
 // metrics contains references to dependencies required to handle the metrics via external executor use case.

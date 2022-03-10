@@ -25,8 +25,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/config"
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/interfaces"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/interfaces"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 )

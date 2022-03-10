@@ -2,7 +2,7 @@
 
 > Last updated Nov 2019 to be reworked for module directory structure.
 
-0. Ensure that you've followed the steps leading up to this on the [README.md](README.md), this includes any dependenices. Clone this repository into the `%GOPATH%\src\github.com\edgexfoundry\` directory, using `git clone https://github.com/edgexfoundry/edgex-go.git %GOPATH%\src\github.com\edgexfoundry\edgex-go`.
+0. Ensure that you've followed the steps leading up to this on the [README.md](README.md), this includes any dependenices. Clone this repository into the `%GOPATH%\src\github.com\edgexfoundry\` directory, using `git clone https://github.com/yuppne/edgex-go-jakarta.git %GOPATH%\src\github.com\edgexfoundry\edgex-go`.
 
 1. Download & install the TDM-GCC from this URL: http://tdm-gcc.tdragon.net/download
 

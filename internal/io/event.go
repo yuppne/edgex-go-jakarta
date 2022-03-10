@@ -13,9 +13,9 @@ import (
 
 // To avoid large data causing unexpected memory exhaustion when decoding CBOR payload, defaultMaxEventSize was introduced as
 // a reasonable limit appropriate for handling CBOR payload in edgex-go.  More details could be found at
-// https://github.com/edgexfoundry/edgex-go/issues/2439
+// https://github.com/yuppne/edgex-go-jakarta/issues/2439
 // TODO Make MaxEventSize a service configuration setting, so that users could adjust the limit per systems requirements
-// https://github.com/edgexfoundry/edgex-go/issues/3237
+// https://github.com/yuppne/edgex-go-jakarta/issues/3237
 const defaultMaxEventSize = int64(25 * 1e6) // 25 MB
 
 func ReadAddEventRequestInBytes(reader io.Reader) ([]byte, errors.EdgeX) {

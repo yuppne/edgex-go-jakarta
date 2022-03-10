@@ -18,11 +18,11 @@ import (
 	"context"
 	"os"
 
-	"github.com/edgexfoundry/edgex-go"
-	"github.com/edgexfoundry/edgex-go/internal"
-	"github.com/edgexfoundry/edgex-go/internal/core/command/config"
-	"github.com/edgexfoundry/edgex-go/internal/core/command/container"
-	"github.com/edgexfoundry/edgex-go/internal/pkg/telemetry"
+	"github.com/yuppne/edgex-go-jakarta"
+	"github.com/yuppne/edgex-go-jakarta/internal"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/command/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/command/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/telemetry"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/flags"

@@ -28,7 +28,7 @@ import (
 
 	"github.com/stretchr/testify/mock"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/secretstore/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/secretstore/config"
 )
 
 func TestInvalidProvider(t *testing.T) {

@@ -27,10 +27,10 @@ import (
 
 	_ "github.com/lib/pq"
 
-	"github.com/edgexfoundry/edgex-go/internal"
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/config"
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/interfaces"
 	"github.com/edgexfoundry/go-mod-secrets/v2/pkg"
+	"github.com/yuppne/edgex-go-jakarta/internal"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/interfaces"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 )

@@ -10,11 +10,6 @@ import (
 	"math"
 	"net/http"
 
-	"github.com/edgexfoundry/edgex-go/internal/core/data/application"
-	dataContainer "github.com/edgexfoundry/edgex-go/internal/core/data/container"
-	"github.com/edgexfoundry/edgex-go/internal/io"
-	"github.com/edgexfoundry/edgex-go/internal/pkg"
-	"github.com/edgexfoundry/edgex-go/internal/pkg/utils"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
@@ -22,6 +17,11 @@ import (
 	responseDTO "github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/responses"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/gorilla/mux"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/data/application"
+	dataContainer "github.com/yuppne/edgex-go-jakarta/internal/core/data/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/io"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/utils"
 )
 
 type ReadingController struct {

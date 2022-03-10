@@ -17,7 +17,7 @@ package main
 import (
 	"context"
 
-	"github.com/edgexfoundry/edgex-go/internal/support/scheduler"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/scheduler"
 
 	"github.com/gorilla/mux"
 )

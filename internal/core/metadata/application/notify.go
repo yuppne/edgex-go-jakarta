@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"net/http"
 
-	metadataContainer "github.com/edgexfoundry/edgex-go/internal/core/metadata/container"
+	metadataContainer "github.com/yuppne/edgex-go-jakarta/internal/core/metadata/container"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"

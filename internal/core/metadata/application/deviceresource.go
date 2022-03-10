@@ -8,7 +8,7 @@ package application
 import (
 	"fmt"
 
-	"github.com/edgexfoundry/edgex-go/internal/core/metadata/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/metadata/container"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos"

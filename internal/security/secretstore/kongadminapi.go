@@ -12,9 +12,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/helper"
-	"github.com/edgexfoundry/edgex-go/internal/security/secretstore/config"
 	jwt "github.com/golang-jwt/jwt/v4"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/helper"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/secretstore/config"
 )
 
 // KongAdminAPI is the main struct used to generate the configuration file

@@ -12,10 +12,10 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 
-	"github.com/edgexfoundry/edgex-go/internal"
-	"github.com/edgexfoundry/edgex-go/internal/security/config/command"
-	"github.com/edgexfoundry/edgex-go/internal/security/proxy/config"
-	"github.com/edgexfoundry/edgex-go/internal/security/proxy/container"
+	"github.com/yuppne/edgex-go-jakarta/internal"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/config/command"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/proxy/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/proxy/container"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 

@@ -13,10 +13,10 @@ import (
 	"os"
 	"sync"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/config/command/help"
-	"github.com/edgexfoundry/edgex-go/internal/security/config/command/proxy"
-	"github.com/edgexfoundry/edgex-go/internal/security/config/interfaces"
-	"github.com/edgexfoundry/edgex-go/internal/security/proxy/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/config/command/help"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/config/command/proxy"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/config/interfaces"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/proxy/container"
 
 	bootstrapContainer "github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/startup"

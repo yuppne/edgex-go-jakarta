@@ -8,7 +8,7 @@ package container
 import (
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"
 
-	"github.com/edgexfoundry/edgex-go/internal/system/agent/interfaces"
+	"github.com/yuppne/edgex-go-jakarta/internal/system/agent/interfaces"
 )
 
 // V2MetricsInterfaceName contains the name of the interfaces.Metrics implementation in the DIC.

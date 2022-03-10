@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/edgexfoundry/edgex-go/internal"
+	"github.com/yuppne/edgex-go-jakarta/internal"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/flags"
 )

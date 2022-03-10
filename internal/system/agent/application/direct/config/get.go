@@ -19,7 +19,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 
-	"github.com/edgexfoundry/edgex-go/internal/system/agent/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/system/agent/container"
 )
 
 func GetConfigs(ctx context.Context, services []string, dic *di.Container) []common.BaseWithConfigResponse {

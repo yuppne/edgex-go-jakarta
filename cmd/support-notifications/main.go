@@ -23,7 +23,7 @@ package main
 import (
 	"context"
 
-	"github.com/edgexfoundry/edgex-go/internal/support/notifications"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/notifications"
 
 	"github.com/gorilla/mux"
 )

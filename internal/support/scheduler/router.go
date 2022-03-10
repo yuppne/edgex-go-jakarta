@@ -12,9 +12,9 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 	"github.com/gorilla/mux"
 
-	commonController "github.com/edgexfoundry/edgex-go/internal/pkg/controller/http"
-	"github.com/edgexfoundry/edgex-go/internal/pkg/correlation"
-	schedulerController "github.com/edgexfoundry/edgex-go/internal/support/scheduler/controller/http"
+	commonController "github.com/yuppne/edgex-go-jakarta/internal/pkg/controller/http"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/correlation"
+	schedulerController "github.com/yuppne/edgex-go-jakarta/internal/support/scheduler/controller/http"
 )
 
 func LoadRestRoutes(r *mux.Router, dic *di.Container) {

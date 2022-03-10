@@ -9,8 +9,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	pkgCommon "github.com/edgexfoundry/edgex-go/internal/pkg/common"
-	"github.com/edgexfoundry/edgex-go/internal/pkg/utils"
+	pkgCommon "github.com/yuppne/edgex-go-jakarta/internal/pkg/common"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/utils"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"

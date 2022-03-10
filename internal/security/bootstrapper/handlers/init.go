@@ -21,10 +21,10 @@ import (
 	"os"
 	"sync"
 
-	bootstrapper "github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/command"
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/command/help"
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/container"
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/interfaces"
+	bootstrapper "github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/command"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/command/help"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/interfaces"
 
 	bootstrapContainer "github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/startup"

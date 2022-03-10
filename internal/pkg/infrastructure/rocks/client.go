@@ -7,8 +7,8 @@
 //
 //import (
 //	"fmt"
-//	"github.com/edgexfoundry/edgex-go/internal/pkg/db"
-//	redisClient "github.com/edgexfoundry/edgex-go/internal/pkg/db/redis"
+//	"github.com/yuppne/edgex-go-jakarta/internal/pkg/db"
+//	redisClient "github.com/yuppne/edgex-go-jakarta/internal/pkg/db/redis"
 //	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 //	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 //	model "github.com/edgexfoundry/go-mod-core-contracts/v2/models"
@@ -20,12 +20,12 @@ package rocks
 import (
 	"fmt"
 
-	"github.com/edgexfoundry/edgex-go/internal/pkg/db"
-	// redisClient "github.com/edgexfoundry/edgex-go/internal/pkg/db/redis"
-	rocksClient "github.com/edgexfoundry/edgex-go/internal/pkg/db/rocks"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/db"
+	// redisClient "github.com/yuppne/edgex-go-jakarta/internal/pkg/db/redis"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	model "github.com/edgexfoundry/go-mod-core-contracts/v2/models"
+	rocksClient "github.com/yuppne/edgex-go-jakarta/internal/pkg/db/rocks"
 
 	"github.com/google/uuid"
 )

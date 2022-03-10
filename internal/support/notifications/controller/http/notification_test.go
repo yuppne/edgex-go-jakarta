@@ -13,8 +13,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/edgexfoundry/edgex-go/internal/support/notifications/container"
-	dbMock "github.com/edgexfoundry/edgex-go/internal/support/notifications/infrastructure/interfaces/mocks"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/notifications/container"
+	dbMock "github.com/yuppne/edgex-go-jakarta/internal/support/notifications/infrastructure/interfaces/mocks"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"
 

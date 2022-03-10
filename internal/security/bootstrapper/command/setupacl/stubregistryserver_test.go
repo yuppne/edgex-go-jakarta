@@ -26,8 +26,8 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/config"
 	"github.com/stretchr/testify/require"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/config"
 )
 
 type registryTestServer struct {

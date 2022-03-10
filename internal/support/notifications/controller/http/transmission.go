@@ -10,10 +10,10 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/edgexfoundry/edgex-go/internal/pkg"
-	"github.com/edgexfoundry/edgex-go/internal/pkg/utils"
-	"github.com/edgexfoundry/edgex-go/internal/support/notifications/application"
-	notificationContainer "github.com/edgexfoundry/edgex-go/internal/support/notifications/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/utils"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/notifications/application"
+	notificationContainer "github.com/yuppne/edgex-go-jakarta/internal/support/notifications/container"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"

@@ -19,10 +19,10 @@ package mocks
 import (
 	"testing"
 
-	. "github.com/edgexfoundry/edgex-go/internal/security/fileprovider"
-	"github.com/edgexfoundry/edgex-go/internal/security/fileprovider/config"
+	. "github.com/yuppne/edgex-go-jakarta/internal/security/fileprovider"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/fileprovider/config"
 
-	secretStoreConfig "github.com/edgexfoundry/edgex-go/internal/security/secretstore/config"
+	secretStoreConfig "github.com/yuppne/edgex-go-jakarta/internal/security/secretstore/config"
 
 	"github.com/stretchr/testify/assert"
 )

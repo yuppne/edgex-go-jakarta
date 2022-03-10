@@ -6,8 +6,8 @@
 package application
 
 import (
-	"github.com/edgexfoundry/edgex-go/internal/support/notifications/container"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/notifications/container"
 
 	bootstrapContainer "github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"

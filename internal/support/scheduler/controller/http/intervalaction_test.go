@@ -13,8 +13,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/edgexfoundry/edgex-go/internal/support/scheduler/container"
-	dbMock "github.com/edgexfoundry/edgex-go/internal/support/scheduler/infrastructure/interfaces/mocks"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/scheduler/container"
+	dbMock "github.com/yuppne/edgex-go-jakarta/internal/support/scheduler/infrastructure/interfaces/mocks"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"

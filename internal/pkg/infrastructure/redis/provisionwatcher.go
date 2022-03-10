@@ -9,10 +9,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	pkgCommon "github.com/edgexfoundry/edgex-go/internal/pkg/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
+	pkgCommon "github.com/yuppne/edgex-go-jakarta/internal/pkg/common"
 
 	"github.com/gomodule/redigo/redis"
 )

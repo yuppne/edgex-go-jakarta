@@ -8,11 +8,6 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/edgexfoundry/edgex-go/internal/core/data/application"
-	dataContainer "github.com/edgexfoundry/edgex-go/internal/core/data/container"
-	"github.com/edgexfoundry/edgex-go/internal/io"
-	"github.com/edgexfoundry/edgex-go/internal/pkg"
-	"github.com/edgexfoundry/edgex-go/internal/pkg/utils"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
@@ -20,6 +15,11 @@ import (
 	requestDTO "github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/requests"
 	responseDTO "github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/responses"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/data/application"
+	dataContainer "github.com/yuppne/edgex-go-jakarta/internal/core/data/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/io"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/utils"
 
 	"github.com/gorilla/mux"
 )
@@ -74,7 +74,7 @@ func (ec *EventController) AddEvent(w http.ResponseWriter, r *http.Request) {
 
 	dataBytes, err := io.ReadAddEventRequestInBytes(r.Body)
 	if err == nil {
-		// Per https://github.com/edgexfoundry/edgex-go/pull/3202#discussion_r587618347
+		// Per https://github.com/yuppne/edgex-go-jakarta/pull/3202#discussion_r587618347
 		// V2 shall asynchronously publish initially encoded payload (not re-encoding) to message bus
 		go application.PublishEvent(dataBytes, profileName, deviceName, sourceName, ctx, ec.dic)
 		// unmarshal bytes to AddEventRequest

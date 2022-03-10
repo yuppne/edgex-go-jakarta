@@ -15,7 +15,7 @@
 //
 //import (
 //	"fmt"
-//	"github.com/edgexfoundry/edgex-go/internal/pkg/db"
+//	"github.com/yuppne/edgex-go-jakarta/internal/pkg/db"
 //	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 //	"github.com/gomodule/redigo/redis"
 //	"os"
@@ -36,7 +36,7 @@ import (
 	"github.com/gomodule/redigo/redis"
 	// "rocksDB go로 된거 추가"
 
-	"github.com/edgexfoundry/edgex-go/internal/pkg/db"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/db"
 )
 
 var currClient *Client // a singleton so Readings can be de-referenced

@@ -9,7 +9,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/edgexfoundry/edgex-go/internal/pkg/application"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/application"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 	commonDTO "github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"

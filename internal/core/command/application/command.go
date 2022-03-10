@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"strings"
 
-	commandContainer "github.com/edgexfoundry/edgex-go/internal/core/command/container"
+	commandContainer "github.com/yuppne/edgex-go-jakarta/internal/core/command/container"
 
 	bootstrapContainer "github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"

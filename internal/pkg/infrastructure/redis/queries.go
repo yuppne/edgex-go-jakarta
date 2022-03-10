@@ -11,9 +11,9 @@ import (
 	"strconv"
 	"strings"
 
-	pkgCommon "github.com/edgexfoundry/edgex-go/internal/pkg/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+	pkgCommon "github.com/yuppne/edgex-go-jakarta/internal/pkg/common"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/google/uuid"

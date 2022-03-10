@@ -25,9 +25,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/command/setupacl/share"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/startup"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/command/setupacl/share"
 )
 
 // AgentTokenType is the type of token to be set on the Consul agent

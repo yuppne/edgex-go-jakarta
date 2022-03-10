@@ -23,8 +23,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/command/setupacl/share"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/command/setupacl/share"
 )
 
 const (

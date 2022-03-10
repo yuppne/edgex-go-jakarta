@@ -23,8 +23,8 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/fileprovider/config"
-	secretstoreConfig "github.com/edgexfoundry/edgex-go/internal/security/secretstore/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/fileprovider/config"
+	secretstoreConfig "github.com/yuppne/edgex-go-jakarta/internal/security/secretstore/config"
 	"github.com/edgexfoundry/go-mod-secrets/v2/secrets"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"

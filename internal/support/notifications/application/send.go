@@ -9,10 +9,10 @@ import (
 	"fmt"
 	"time"
 
-	pkgCommon "github.com/edgexfoundry/edgex-go/internal/pkg/common"
-	"github.com/edgexfoundry/edgex-go/internal/support/notifications/application/channel"
-	"github.com/edgexfoundry/edgex-go/internal/support/notifications/config"
-	"github.com/edgexfoundry/edgex-go/internal/support/notifications/container"
+	pkgCommon "github.com/yuppne/edgex-go-jakarta/internal/pkg/common"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/notifications/application/channel"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/notifications/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/notifications/container"
 
 	bootstrapContainer "github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"

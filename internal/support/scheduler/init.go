@@ -19,9 +19,9 @@ import (
 	"context"
 	"sync"
 
-	"github.com/edgexfoundry/edgex-go/internal/support/scheduler/application"
-	"github.com/edgexfoundry/edgex-go/internal/support/scheduler/application/scheduler"
-	"github.com/edgexfoundry/edgex-go/internal/support/scheduler/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/scheduler/application"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/scheduler/application/scheduler"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/scheduler/container"
 
 	bootstrapContainer "github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/startup"

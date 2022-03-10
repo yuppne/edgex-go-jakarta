@@ -8,9 +8,9 @@ package http
 import (
 	"net/http"
 
-	"github.com/edgexfoundry/edgex-go/internal/core/metadata/application"
-	"github.com/edgexfoundry/edgex-go/internal/pkg"
-	"github.com/edgexfoundry/edgex-go/internal/pkg/utils"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/metadata/application"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/utils"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"

@@ -19,7 +19,7 @@ package container
 import (
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/proxy/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/proxy/config"
 )
 
 // ConfigurationName contains the name of the config.ConfigurationStruct implementation in the DIC.

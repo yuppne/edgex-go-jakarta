@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/edgexfoundry/edgex-go/internal/support/scheduler/config"
-	"github.com/edgexfoundry/edgex-go/internal/support/scheduler/infrastructure/interfaces"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/scheduler/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/scheduler/infrastructure/interfaces"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"

@@ -15,7 +15,7 @@
 package container
 
 import (
-	"github.com/edgexfoundry/edgex-go/internal/core/data/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/data/config"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"
 )

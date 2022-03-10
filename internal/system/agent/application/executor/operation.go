@@ -15,7 +15,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/requests"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 
-	"github.com/edgexfoundry/edgex-go/internal/system/agent/interfaces"
+	"github.com/yuppne/edgex-go-jakarta/internal/system/agent/interfaces"
 )
 
 // operation contains references to dependencies required to handle the operation via external executor use case.

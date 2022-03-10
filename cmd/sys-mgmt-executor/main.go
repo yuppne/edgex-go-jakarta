@@ -19,7 +19,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/edgexfoundry/edgex-go/internal/system/executor"
+	"github.com/yuppne/edgex-go-jakarta/internal/system/executor"
 )
 
 func main() {

@@ -24,8 +24,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/helper"
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/redis/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/helper"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/redis/container"
 
 	bootstrapContainer "github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/secret"

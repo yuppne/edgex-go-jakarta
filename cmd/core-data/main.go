@@ -17,7 +17,7 @@ package main
 import (
 	"context"
 
-	"github.com/edgexfoundry/edgex-go/internal/core/data"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/data"
 
 	"github.com/gorilla/mux"
 )

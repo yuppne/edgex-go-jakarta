@@ -13,13 +13,13 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/edgexfoundry/edgex-go/internal/core/data/container"
-	dbMock "github.com/edgexfoundry/edgex-go/internal/core/data/infrastructure/interfaces/mocks"
-	"github.com/edgexfoundry/edgex-go/internal/core/data/mocks"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 	commonDTO "github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 	responseDTO "github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/responses"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/data/container"
+	dbMock "github.com/yuppne/edgex-go-jakarta/internal/core/data/infrastructure/interfaces/mocks"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/data/mocks"
 )
 
 func TestReadingTotalCount(t *testing.T) {

@@ -10,8 +10,8 @@ import (
 	"errors"
 	"testing"
 
-	. "github.com/edgexfoundry/edgex-go/internal/security/kdf/mocks"
-	. "github.com/edgexfoundry/edgex-go/internal/security/pipedhexreader/mocks"
+	. "github.com/yuppne/edgex-go-jakarta/internal/security/kdf/mocks"
+	. "github.com/yuppne/edgex-go-jakarta/internal/security/pipedhexreader/mocks"
 	"github.com/edgexfoundry/go-mod-secrets/v2/pkg/types"
 
 	"github.com/edgexfoundry/go-mod-secrets/v2/pkg/token/fileioperformer/mocks"

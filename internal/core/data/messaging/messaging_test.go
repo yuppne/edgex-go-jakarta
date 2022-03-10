@@ -6,8 +6,6 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/edgexfoundry/edgex-go/internal/core/data/config"
-	"github.com/edgexfoundry/edgex-go/internal/core/data/container"
 	bootstrapContainer "github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/interfaces/mocks"
 	messaging2 "github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/messaging"
@@ -17,6 +15,8 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 	"github.com/edgexfoundry/go-mod-messaging/v2/messaging"
 	"github.com/stretchr/testify/assert"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/data/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/data/container"
 )
 
 var lc logger.LoggingClient

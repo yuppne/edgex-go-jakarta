@@ -9,7 +9,7 @@ description: |
   snap contains all of the EdgeX core, security, and support reference 
   services, as well as Consul, Kong, Redis, Vault, and device-virtual.
   The packaging for this snap can be found at:
-    https://github.com/edgexfoundry/edgex-go
+    https://github.com/yuppne/edgex-go-jakarta
 
 icon: snap/local/assets/edgex-snap-icon.png
 
@@ -279,7 +279,7 @@ apps:
     plugs: [network, network-bind]
     # for now, specify a shorter stop-timeout until services learn how
     # to handle SIGTERM properly with as per
-    # https://github.com/edgexfoundry/edgex-go/issues/1306
+    # https://github.com/yuppne/edgex-go-jakarta/issues/1306
     stop-timeout: 10s
   core-metadata:
     adapter: none

@@ -9,12 +9,12 @@ package proxy
 import (
 	"fmt"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/config/command/proxy/adduser"
-	"github.com/edgexfoundry/edgex-go/internal/security/config/command/proxy/deluser"
-	"github.com/edgexfoundry/edgex-go/internal/security/config/command/proxy/jwt"
-	"github.com/edgexfoundry/edgex-go/internal/security/config/command/proxy/tls"
-	"github.com/edgexfoundry/edgex-go/internal/security/config/interfaces"
-	"github.com/edgexfoundry/edgex-go/internal/security/proxy/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/config/command/proxy/adduser"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/config/command/proxy/deluser"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/config/command/proxy/jwt"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/config/command/proxy/tls"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/config/interfaces"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/proxy/config"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 )

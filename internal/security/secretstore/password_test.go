@@ -24,8 +24,8 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/secretstore/config"
 	"github.com/edgexfoundry/go-mod-secrets/v2/pkg"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/secretstore/config"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 

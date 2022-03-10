@@ -9,11 +9,11 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/edgexfoundry/edgex-go/internal/support/notifications/application/channel"
-	senderMock "github.com/edgexfoundry/edgex-go/internal/support/notifications/application/channel/mocks"
-	"github.com/edgexfoundry/edgex-go/internal/support/notifications/container"
-	notificationContainer "github.com/edgexfoundry/edgex-go/internal/support/notifications/container"
-	dbMock "github.com/edgexfoundry/edgex-go/internal/support/notifications/infrastructure/interfaces/mocks"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/notifications/application/channel"
+	senderMock "github.com/yuppne/edgex-go-jakarta/internal/support/notifications/application/channel/mocks"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/notifications/container"
+	notificationContainer "github.com/yuppne/edgex-go-jakarta/internal/support/notifications/container"
+	dbMock "github.com/yuppne/edgex-go-jakarta/internal/support/notifications/infrastructure/interfaces/mocks"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"

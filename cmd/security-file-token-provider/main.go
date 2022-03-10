@@ -18,7 +18,7 @@ package main
 import (
 	"context"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/fileprovider"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/fileprovider"
 )
 
 func main() {

@@ -377,7 +377,7 @@ curl -v --cacert /var/snap/edgeca/current/CA.pem -X GET https://server01:8443/co
 
 ## Limitations
 
-[See the GitHub issues with label snap for current issues.](https://github.com/edgexfoundry/edgex-go/issues?q=is%3Aopen+is%3Aissue+label%3Asnap)
+[See the GitHub issues with label snap for current issues.](https://github.com/yuppne/edgex-go-jakarta/issues?q=is%3Aopen+is%3Aissue+label%3Asnap)
 
 ## Service environment configuration overrides
 **Note** - all of the configuration options below must be specified with the prefix: `env.<service>.` where `<service>` is one of the following:
@@ -483,7 +483,7 @@ The snap is built with [snapcraft](https://snapcraft.io), and the snapcraft.yaml
 so the first step for all build methods involves cloning this repository:
 
 ```bash
-git clone https://github.com/edgexfoundry/edgex-go
+git clone https://github.com/yuppne/edgex-go-jakarta
 cd edgex-go
 ```
 
@@ -550,7 +550,7 @@ Starting edgex
 $ lxc exec edgex /bin/bash
 root@edgex:~# sudo apt update && sudo apt install snapd squashfuse git -y
 root@edgex:~# sudo snap install snapcraft --classic
-root@edgex:~# git clone https://github.com/edgexfoundry/edgex-go
+root@edgex:~# git clone https://github.com/yuppne/edgex-go-jakarta
 root@edgex:~# cd edgex-go && snapcraft --destructive-mode
 ```
 
@@ -578,7 +578,7 @@ To use multipass to create an Ubuntu 20.04 environment suitable for building the
 ```bash
 $ multipass launch focal -n edgex-snap-build
 $ multipass shell edgex-snap-build
-multipass@ubuntu:~$ git clone https://github.com/edgexfoundry/edgex-go
+multipass@ubuntu:~$ git clone https://github.com/yuppne/edgex-go-jakarta
 multipass@ubuntu:~$ cd edgex-go
 multipass~ubuntu:~$ sudo snap install snapcraft --classic
 multipass~ubuntu:~$ snapcraft --destructive-mode

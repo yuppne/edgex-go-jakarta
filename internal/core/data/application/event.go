@@ -10,8 +10,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/edgexfoundry/edgex-go/internal/core/data/container"
-	"github.com/edgexfoundry/edgex-go/internal/pkg/correlation"
 	bootstrapContainer "github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
@@ -19,6 +17,8 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 	msgTypes "github.com/edgexfoundry/go-mod-messaging/v2/pkg/types"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/data/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/correlation"
 
 	"github.com/google/uuid"
 )

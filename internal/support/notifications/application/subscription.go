@@ -9,9 +9,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/edgexfoundry/edgex-go/internal/pkg/correlation"
-	"github.com/edgexfoundry/edgex-go/internal/support/notifications/container"
-	"github.com/edgexfoundry/edgex-go/internal/support/notifications/infrastructure/interfaces"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/correlation"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/notifications/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/notifications/infrastructure/interfaces"
 
 	bootstrapContainer "github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"

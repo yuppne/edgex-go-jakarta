@@ -3,7 +3,7 @@
 # $1 - go import path
 #
 # example usage:
-# $ gopartbootstrap github.com/edgexfoundry/edgex-go
+# $ gopartbootstrap github.com/yuppne/edgex-go-jakarta
 gopartbootstrap() 
 {
     # first set the GOPATH to be in the current directory and in ".gopath"

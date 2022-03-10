@@ -4,7 +4,7 @@
 # written by security-secretstore-setup (2.0.0-*) with
 # read-only perm for the owner.
 #
-# See: https://github.com/edgexfoundry/edgex-go/issues/3818
+# See: https://github.com/yuppne/edgex-go-jakarta/issues/3818
 #
 # This is hook is called in the context of the new snap
 # revision, and prior to services being started.

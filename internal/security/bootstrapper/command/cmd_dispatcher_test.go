@@ -20,7 +20,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/config"
 
 	"github.com/stretchr/testify/require"
 

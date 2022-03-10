@@ -21,7 +21,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/secretstore/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/secretstore/config"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 )

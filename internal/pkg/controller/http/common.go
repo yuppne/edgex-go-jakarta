@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/edgexfoundry/edgex-go"
-	"github.com/edgexfoundry/edgex-go/internal/pkg/telemetry"
+	"github.com/yuppne/edgex-go-jakarta"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/telemetry"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"

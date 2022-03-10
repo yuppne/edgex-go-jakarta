@@ -13,9 +13,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/edgexfoundry/edgex-go/internal/core/command/application"
-	"github.com/edgexfoundry/edgex-go/internal/core/command/config"
-	commandContainer "github.com/edgexfoundry/edgex-go/internal/core/command/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/command/application"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/command/config"
+	commandContainer "github.com/yuppne/edgex-go-jakarta/internal/core/command/container"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	bootstrapContainer "github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"

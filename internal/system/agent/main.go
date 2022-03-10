@@ -18,10 +18,10 @@ import (
 	"context"
 	"os"
 
-	"github.com/edgexfoundry/edgex-go"
-	"github.com/edgexfoundry/edgex-go/internal"
-	agentConfig "github.com/edgexfoundry/edgex-go/internal/system/agent/config"
-	"github.com/edgexfoundry/edgex-go/internal/system/agent/container"
+	"github.com/yuppne/edgex-go-jakarta"
+	"github.com/yuppne/edgex-go-jakarta/internal"
+	agentConfig "github.com/yuppne/edgex-go-jakarta/internal/system/agent/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/system/agent/container"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/flags"

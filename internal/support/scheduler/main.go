@@ -19,12 +19,12 @@ import (
 	"context"
 	"os"
 
-	"github.com/edgexfoundry/edgex-go"
-	"github.com/edgexfoundry/edgex-go/internal"
-	pkgHandlers "github.com/edgexfoundry/edgex-go/internal/pkg/bootstrap/handlers"
-	"github.com/edgexfoundry/edgex-go/internal/pkg/telemetry"
-	"github.com/edgexfoundry/edgex-go/internal/support/scheduler/config"
-	"github.com/edgexfoundry/edgex-go/internal/support/scheduler/container"
+	"github.com/yuppne/edgex-go-jakarta"
+	"github.com/yuppne/edgex-go-jakarta/internal"
+	pkgHandlers "github.com/yuppne/edgex-go-jakarta/internal/pkg/bootstrap/handlers"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/telemetry"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/scheduler/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/scheduler/container"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/flags"

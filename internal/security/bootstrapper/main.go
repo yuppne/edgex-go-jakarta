@@ -23,12 +23,12 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 
-	"github.com/edgexfoundry/edgex-go/internal"
-	bootstrapper "github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/command"
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/config"
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/container"
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/handlers"
-	"github.com/edgexfoundry/edgex-go/internal/security/bootstrapper/redis"
+	"github.com/yuppne/edgex-go-jakarta/internal"
+	bootstrapper "github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/command"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/handlers"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/bootstrapper/redis"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/interfaces"

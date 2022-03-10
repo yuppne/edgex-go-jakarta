@@ -9,12 +9,12 @@ import (
 	"math"
 	"net/http"
 
-	"github.com/edgexfoundry/edgex-go/internal/io"
-	"github.com/edgexfoundry/edgex-go/internal/pkg"
-	"github.com/edgexfoundry/edgex-go/internal/pkg/correlation"
-	"github.com/edgexfoundry/edgex-go/internal/pkg/utils"
-	"github.com/edgexfoundry/edgex-go/internal/support/scheduler/application"
-	schedulerContainer "github.com/edgexfoundry/edgex-go/internal/support/scheduler/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/io"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/correlation"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/utils"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/scheduler/application"
+	schedulerContainer "github.com/yuppne/edgex-go-jakarta/internal/support/scheduler/container"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"

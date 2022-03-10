@@ -9,12 +9,6 @@ import (
 	"math"
 	"net/http"
 
-	"github.com/edgexfoundry/edgex-go/internal/core/metadata/application"
-	metadataContainer "github.com/edgexfoundry/edgex-go/internal/core/metadata/container"
-	"github.com/edgexfoundry/edgex-go/internal/io"
-	"github.com/edgexfoundry/edgex-go/internal/pkg"
-	"github.com/edgexfoundry/edgex-go/internal/pkg/correlation"
-	"github.com/edgexfoundry/edgex-go/internal/pkg/utils"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
@@ -22,6 +16,12 @@ import (
 	requestDTO "github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/requests"
 	responseDTO "github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/responses"
 	"github.com/gorilla/mux"
+	"github.com/yuppne/edgex-go-jakarta/internal/core/metadata/application"
+	metadataContainer "github.com/yuppne/edgex-go-jakarta/internal/core/metadata/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/io"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/correlation"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/utils"
 )
 
 type ProvisionWatcherController struct {

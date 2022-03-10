@@ -17,12 +17,12 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/requests"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 
-	"github.com/edgexfoundry/edgex-go/internal/pkg"
-	"github.com/edgexfoundry/edgex-go/internal/pkg/utils"
-	"github.com/edgexfoundry/edgex-go/internal/system/agent/application/direct"
-	"github.com/edgexfoundry/edgex-go/internal/system/agent/application/direct/config"
-	"github.com/edgexfoundry/edgex-go/internal/system/agent/application/executor"
-	"github.com/edgexfoundry/edgex-go/internal/system/agent/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/utils"
+	"github.com/yuppne/edgex-go-jakarta/internal/system/agent/application/direct"
+	"github.com/yuppne/edgex-go-jakarta/internal/system/agent/application/direct/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/system/agent/application/executor"
+	"github.com/yuppne/edgex-go-jakarta/internal/system/agent/container"
 )
 
 type AgentController struct {

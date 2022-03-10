@@ -6,7 +6,7 @@
 package container
 
 import (
-	"github.com/edgexfoundry/edgex-go/internal/support/scheduler/infrastructure/interfaces"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/scheduler/infrastructure/interfaces"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"
 )

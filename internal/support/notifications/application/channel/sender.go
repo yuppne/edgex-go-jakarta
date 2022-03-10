@@ -6,8 +6,8 @@
 package channel
 
 import (
-	"github.com/edgexfoundry/edgex-go/internal/pkg/utils"
-	notificationContainer "github.com/edgexfoundry/edgex-go/internal/support/notifications/container"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/utils"
+	notificationContainer "github.com/yuppne/edgex-go-jakarta/internal/support/notifications/container"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"

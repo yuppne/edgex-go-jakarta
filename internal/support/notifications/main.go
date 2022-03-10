@@ -25,12 +25,12 @@ import (
 	"context"
 	"os"
 
-	"github.com/edgexfoundry/edgex-go"
-	"github.com/edgexfoundry/edgex-go/internal"
-	pkgHandlers "github.com/edgexfoundry/edgex-go/internal/pkg/bootstrap/handlers"
-	"github.com/edgexfoundry/edgex-go/internal/pkg/telemetry"
-	notificationsConfig "github.com/edgexfoundry/edgex-go/internal/support/notifications/config"
-	"github.com/edgexfoundry/edgex-go/internal/support/notifications/container"
+	"github.com/yuppne/edgex-go-jakarta"
+	"github.com/yuppne/edgex-go-jakarta/internal"
+	pkgHandlers "github.com/yuppne/edgex-go-jakarta/internal/pkg/bootstrap/handlers"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/telemetry"
+	notificationsConfig "github.com/yuppne/edgex-go-jakarta/internal/support/notifications/config"
+	"github.com/yuppne/edgex-go-jakarta/internal/support/notifications/container"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/flags"

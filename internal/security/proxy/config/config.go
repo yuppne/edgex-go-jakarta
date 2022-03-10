@@ -23,7 +23,7 @@ import (
 
 	bootstrapConfig "github.com/edgexfoundry/go-mod-bootstrap/v2/config"
 
-	"github.com/edgexfoundry/edgex-go/internal/security/proxy/models"
+	"github.com/yuppne/edgex-go-jakarta/internal/security/proxy/models"
 )
 
 type ConfigurationStruct struct {
