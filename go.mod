@@ -15,6 +15,7 @@ require (
 	github.com/lib/pq v1.10.3
 	github.com/pelletier/go-toml v1.9.4
 	github.com/stretchr/testify v1.7.0
+	github.com/yuppne/gorocksdb v0.0.0-20191217155057-f0fad39f321c
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
 	gopkg.in/eapache/queue.v1 v1.1.0
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b

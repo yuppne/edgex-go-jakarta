@@ -38,3 +38,12 @@ type Configuration struct {
 	Password     string
 	BatchSize    int
 }
+
+//type Configuration_rocks struct {
+//	DbType       string
+//	Host         string
+//	Port         int
+//	DatabaseName string
+//	Username     string
+//	Password     string
+//}

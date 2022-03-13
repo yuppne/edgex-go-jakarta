@@ -23,99 +23,64 @@
 //	"time"
 //)
 
-package rocks
+package gorocksdb
 
+// #include <stdlib.h>
+// #include "rocksdb/c.h"
+import "C"
 import (
-	"fmt"
-	"os"
+	"errors"
+	// "github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
+	// "github.com/yuppne/edgex-go-jakarta/internal/pkg/db"
+	_ "github.com/yuppne/gorocksdb"
 	"sync"
-	"time"
-
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
-
-	"github.com/gomodule/redigo/redis"
-	// "rocksDB go로 된거 추가"
-
-	"github.com/yuppne/edgex-go-jakarta/internal/pkg/db"
+	"unsafe"
 )
 
 var currClient *Client // a singleton so Readings can be de-referenced
 var once sync.Once
 
-// Client represents a Redis client
+// DB is a reusable handle to a RocksDB database on disk, created by Open.
 type Client struct {
-	Pool          *redis.Pool // A thread-safe pool of connections to Redis
-	BatchSize     int
-	loggingClient logger.LoggingClient
+	c    *C.rocksdb_t
+	name string
+	opts *C.Options
 }
+
+//type Client struct {
+//	database      *gorocksdb.DB
+//	loggingClient logger.LoggingClient
+//}
 
 type CoreDataClient struct {
 	*Client
 }
 
-// Return a pointer to the Redis client
-func NewClient(config db.Configuration, lc logger.LoggingClient) (*Client, error) {
-	once.Do(func() {
-		connectionString := fmt.Sprintf("%s:%d", config.Host, config.Port)
-		opts := []redis.DialOption{
-			redis.DialConnectTimeout(time.Duration(config.Timeout) * time.Millisecond),
-		}
-		if os.Getenv("EDGEX_SECURITY_SECRET_STORE") != "false" {
-			opts = append(opts, redis.DialPassword(config.Password))
-		}
+// OpenDb opens a database with the specified options.
+func OpenDb(opts *C.Options, name string) (*Client, error) {
+	var (
+		cErr  *C.char
+		cName = C.CString(name)
+	)
+	defer C.free(unsafe.Pointer(cName))
 
-		dialFunc := func() (redis.Conn, error) {
-			conn, err := redis.Dial(
-				"tcp", connectionString, opts...,
-			)
-			if err == nil {
-				_, err = conn.Do("PING")
-				if err == nil {
-					return conn, nil
-				}
-			}
+	db := C.rocksdb_open(opts.c, cName, &cErr)
 
-			return nil, fmt.Errorf("could not dial Redis: %s", err)
-		}
-		// Default the batch size to 1,000 if not set
-		batchSize := 1000
-		if config.BatchSize != 0 {
-			batchSize = config.BatchSize
-		}
-		currClient = &Client{
-			Pool: &redis.Pool{
-				IdleTimeout: 0,
-				/* The current implementation processes nested structs using concurrent connections.
-				 * With the deepest nesting level being 3, three shall be the number of maximum open
-				 * idle connections in the pool, to allow reuse.
-				 * TODO: Once we have a concurrent benchmark, this should be revisited.
-				 * TODO: Longer term, once the objects are clean of external dependencies, the use
-				 * of another serializer should make this moot.
-				 */
-				MaxIdle: 10,
-				Dial:    dialFunc,
-			},
-			BatchSize:     batchSize,
-			loggingClient: lc,
-		}
-	})
+	if cErr != nil {
+		defer C.rocksdb_free(unsafe.Pointer(cErr))
+		return nil, errors.New(C.GoString(cErr))
+	}
 
-	// Test connectivity now so don't have failures later when doing lazy connect.
-	if _, err := currClient.Pool.Dial(); err != nil {
-		return nil, err
+	currClient = &Client{
+		name: name,
+		c:    db,
+		opts: opts,
 	}
 
 	return currClient, nil
 }
 
-// Connect connects to Redis
-func (c *Client) Connect() error {
-	return nil
-}
-
-// CloseSession closes the connections to Redis
-func (c *Client) CloseSession() {
-	_ = c.Pool.Close()
-	currClient = nil
-	once = sync.Once{}
+// Close closes the database.
+func (db *Client) Close() {
+	C.rocksdb_close(db.c)
 }

@@ -3,18 +3,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-//package redis
-//
-//import (
-//	"fmt"
-//	"github.com/yuppne/edgex-go-jakarta/internal/pkg/db"
-//	redisClient "github.com/yuppne/edgex-go-jakarta/internal/pkg/db/redis"
-//	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
-//	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
-//	model "github.com/edgexfoundry/go-mod-core-contracts/v2/models"
-//	"github.com/google/uuid"
-//)
-
 package rocks
 
 import (
