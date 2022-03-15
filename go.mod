@@ -7,12 +7,15 @@ require (
 	github.com/edgexfoundry/go-mod-messaging/v2 v2.1.0
 	github.com/edgexfoundry/go-mod-registry/v2 v2.1.0
 	github.com/edgexfoundry/go-mod-secrets/v2 v2.1.0
+	github.com/facebookgo/ensure v0.0.0-20200202191622-63f1cf65ac4c // indirect
+	github.com/facebookgo/stack v0.0.0-20160209184415-751773369052 // indirect
+	github.com/facebookgo/subset v0.0.0-20200203212716-c811ad88dec4 // indirect
 	github.com/fxamacker/cbor/v2 v2.3.0
 	github.com/golang-jwt/jwt/v4 v4.1.0
 	github.com/gomodule/redigo v2.0.0+incompatible
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
-	github.com/lib/pq v1.10.3
+	github.com/lib/pq v1.10.4
 	github.com/linxGnu/grocksdb v1.6.48
 	github.com/pelletier/go-toml v1.9.4
 	github.com/stretchr/testify v1.7.0

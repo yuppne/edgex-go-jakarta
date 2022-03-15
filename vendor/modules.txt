@@ -69,6 +69,12 @@ github.com/edgexfoundry/go-mod-secrets/v2/pkg/token/fileioperformer/mocks
 github.com/edgexfoundry/go-mod-secrets/v2/pkg/types
 github.com/edgexfoundry/go-mod-secrets/v2/secrets
 github.com/edgexfoundry/go-mod-secrets/v2/secrets/mocks
+# github.com/facebookgo/ensure v0.0.0-20200202191622-63f1cf65ac4c
+## explicit
+# github.com/facebookgo/stack v0.0.0-20160209184415-751773369052
+## explicit
+# github.com/facebookgo/subset v0.0.0-20200203212716-c811ad88dec4
+## explicit
 # github.com/fatih/color v1.9.0
 github.com/fatih/color
 # github.com/fxamacker/cbor/v2 v2.3.0
@@ -128,7 +134,7 @@ github.com/hashicorp/golang-lru/simplelru
 github.com/hashicorp/serf/coordinate
 # github.com/leodido/go-urn v1.2.1
 github.com/leodido/go-urn
-# github.com/lib/pq v1.10.3
+# github.com/lib/pq v1.10.4
 ## explicit
 github.com/lib/pq
 github.com/lib/pq/oid
