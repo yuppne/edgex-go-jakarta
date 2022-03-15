@@ -48,13 +48,8 @@ type Client struct {
 	loggingClient logger.LoggingClient
 }
 
-type CoreDataClient struct {
-	*Client
-}
-
 // OpenDb opens a database with the specified options.
 func NewClient(config db.Configuration, lc logger.LoggingClient) (*Client, error) {
-	r := Client{}
 
 	bbto := grocksdb.NewDefaultBlockBasedTableOptions()
 	bbto.SetBlockCache(grocksdb.NewLRUCache(3 << 30))
@@ -66,9 +61,12 @@ func NewClient(config db.Configuration, lc logger.LoggingClient) (*Client, error
 	db, _ := grocksdb.OpenDb(opts, "/path/to/db")
 	defer db.Close()
 
-	r.database = db
-	r.loggingClient = lc
+	currClient = &Client{
+		database:      db,
+		loggingClient: lc,
+	}
 
-	return r, nil
+	return currClient, nil
+
 }
 
