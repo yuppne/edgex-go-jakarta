@@ -29,58 +29,46 @@ package gorocksdb
 // #include "rocksdb/c.h"
 import "C"
 import (
-	"errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/db"
+	"github.com/yuppne/gorocksdb"
+
 	// "github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 	// "github.com/yuppne/edgex-go-jakarta/internal/pkg/db"
-	_ "github.com/yuppne/gorocksdb"
+	"github.com/linxGnu/grocksdb"
+	//_ "github.com/yuppne/gorocksdb"
 	"sync"
-	"unsafe"
 )
 
 var currClient *Client // a singleton so Readings can be de-referenced
 var once sync.Once
 
-// DB is a reusable handle to a RocksDB database on disk, created by Open.
 type Client struct {
-	c    *C.rocksdb_t
-	name string
-	opts *C.Options
+	database      *gorocksdb.DB
+	loggingClient logger.LoggingClient
 }
-
-//type Client struct {
-//	database      *gorocksdb.DB
-//	loggingClient logger.LoggingClient
-//}
 
 type CoreDataClient struct {
 	*Client
 }
 
 // OpenDb opens a database with the specified options.
-func OpenDb(opts *C.Options, name string) (*Client, error) {
-	var (
-		cErr  *C.char
-		cName = C.CString(name)
-	)
-	defer C.free(unsafe.Pointer(cName))
+func NewClient(config db.Configuration, lc logger.LoggingClient) (*Client, error) {
+	r := Client{}
 
-	db := C.rocksdb_open(opts.c, cName, &cErr)
+	bbto := grocksdb.NewDefaultBlockBasedTableOptions()
+	bbto.SetBlockCache(grocksdb.NewLRUCache(3 << 30))
 
-	if cErr != nil {
-		defer C.rocksdb_free(unsafe.Pointer(cErr))
-		return nil, errors.New(C.GoString(cErr))
-	}
+	opts := grocksdb.NewDefaultOptions()
+	opts.SetBlockBasedTableFactory(bbto)
+	opts.SetCreateIfMissing(true)
 
-	currClient = &Client{
-		name: name,
-		c:    db,
-		opts: opts,
-	}
+	db, _ := grocksdb.OpenDb(opts, "/path/to/db")
+	defer db.Close()
 
-	return currClient, nil
+	r.database = db
+	r.loggingClient = lc
+
+	return r, nil
 }
 
-// Close closes the database.
-func (db *Client) Close() {
-	C.rocksdb_close(db.c)
-}

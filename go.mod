@@ -13,6 +13,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
 	github.com/lib/pq v1.10.3
+	github.com/linxGnu/grocksdb v1.6.48
 	github.com/pelletier/go-toml v1.9.4
 	github.com/stretchr/testify v1.7.0
 	github.com/yuppne/gorocksdb v0.0.0-20191217155057-f0fad39f321c
