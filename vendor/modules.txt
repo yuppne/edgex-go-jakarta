@@ -69,6 +69,12 @@ github.com/edgexfoundry/go-mod-secrets/v2/pkg/token/fileioperformer/mocks
 github.com/edgexfoundry/go-mod-secrets/v2/pkg/types
 github.com/edgexfoundry/go-mod-secrets/v2/secrets
 github.com/edgexfoundry/go-mod-secrets/v2/secrets/mocks
+# github.com/facebookgo/ensure v0.0.0-20200202191622-63f1cf65ac4c
+## explicit
+# github.com/facebookgo/stack v0.0.0-20160209184415-751773369052
+## explicit
+# github.com/facebookgo/subset v0.0.0-20200203212716-c811ad88dec4
+## explicit
 # github.com/fatih/color v1.9.0
 github.com/fatih/color
 # github.com/fxamacker/cbor/v2 v2.3.0
@@ -159,7 +165,7 @@ github.com/pelletier/go-toml
 github.com/pmezard/go-difflib/difflib
 # github.com/stretchr/objx v0.1.1
 github.com/stretchr/objx
-# github.com/stretchr/testify v1.7.0
+# github.com/stretchr/testify v1.7.1
 ## explicit
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/mock
