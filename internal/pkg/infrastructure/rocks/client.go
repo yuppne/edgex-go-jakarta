@@ -3,28 +3,27 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package rocks
+package grocksdb
 
 import (
 	"fmt"
 
-	"github.com/yuppne/edgex-go-jakarta/internal/pkg/db"
-	// redisClient "github.com/yuppne/edgex-go-jakarta/internal/pkg/db/redis"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	model "github.com/edgexfoundry/go-mod-core-contracts/v2/models"
-	rocksClient "github.com/yuppne/edgex-go-jakarta/internal/pkg/db/rocks"
-
 	"github.com/google/uuid"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/db"
+	rocksClient "github.com/yuppne/edgex-go-jakarta/internal/pkg/db/rocks"
 )
 
-//type Client struct {
-//	*redisClient.Client
-//	loggingClient logger.LoggingClient
-//}
 type Client struct {
 	*rocksClient.Client
 	loggingClient logger.LoggingClient
+}
+
+func (c *Client) CloseSession() {
+	//TODO implement me
+	panic("implement me")
 }
 
 func NewClient(config db.Configuration, logger logger.LoggingClient) (*Client, errors.EdgeX) {
@@ -33,7 +32,7 @@ func NewClient(config db.Configuration, logger logger.LoggingClient) (*Client, e
 	dc.Client, err = rocksClient.NewClient(config, logger)
 	dc.loggingClient = logger
 	if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindDatabaseError, "redis client creation failed", err)
+		return nil, errors.NewCommonEdgeX(errors.KindDatabaseError, "rocksdb client creation failed", err)
 	}
 
 	return dc, nil
@@ -82,8 +81,7 @@ func (c *Client) DeleteEventById(id string) (edgeXerr errors.EdgeX) {
 
 // Add a new device profle
 func (c *Client) AddDeviceProfile(dp model.DeviceProfile) (model.DeviceProfile, errors.EdgeX) {
-	conn := c.Pool.Get()
-	defer conn.Close()
+	conn := c.Client
 
 	if dp.Id != "" {
 		_, err := uuid.Parse(dp.Id)

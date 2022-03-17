@@ -3,17 +3,18 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package rocks
+package grocksdb
 
 import (
 	"encoding/json"
 	"fmt"
-	"strconv"
-	"strings"
-
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+	"github.com/linxGnu/grocksdb"
 	pkgCommon "github.com/yuppne/edgex-go-jakarta/internal/pkg/common"
+	rocksClient "github.com/yuppne/edgex-go-jakarta/internal/pkg/db/rocks"
+	"strconv"
+	"strings"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/google/uuid"
@@ -165,7 +166,7 @@ func getObjectsByIds(conn redis.Conn, ids []interface{}) ([][]byte, errors.EdgeX
 }
 
 // objectNameExists checks whether the object name exists or not in the specified hashKey
-func objectNameExists(conn redis.Conn, hashKey string, name string) (bool, errors.EdgeX) {
+func objectNameExists(conn rocksClient.Client, hashKey string, name string) (bool, errors.EdgeX) {
 	exists, err := redis.Bool(conn.Do(HEXISTS, hashKey, name))
 	if err != nil {
 		return false, errors.NewCommonEdgeX(errors.KindDatabaseError, "object name existence check failed", err)
@@ -174,8 +175,14 @@ func objectNameExists(conn redis.Conn, hashKey string, name string) (bool, error
 }
 
 // objectIdExists checks whether the object id exists or not
-func objectIdExists(conn redis.Conn, id string) (bool, errors.EdgeX) {
-	exists, err := redis.Bool(conn.Do(EXISTS, id))
+func objectIdExists(conn rocksClient.Client, id string) (bool, errors.EdgeX) {
+	// exists, err := redis.Bool(conn.Do(EXISTS, id))
+	// 키가 존재하는지 보는것같아
+	// if get() retutn, else ()
+	ro := grocksdb.NewDefaultReadOptions()
+	db := conn.Database
+	existsIdk, err := db.Get(ro, []byte(id))
+	exists := existsIdk.Exists()
 	if err != nil {
 		return false, errors.NewCommonEdgeX(errors.KindDatabaseError, "object Id existence check failed", err)
 	}

@@ -3,11 +3,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package rocks
+package grocksdb
 
 import (
 	"encoding/json"
 	"fmt"
+	rocksClient "github.com/yuppne/edgex-go-jakarta/internal/pkg/db/rocks"
 
 	pkgCommon "github.com/yuppne/edgex-go-jakarta/internal/pkg/common"
 
@@ -32,7 +33,7 @@ func deviceStoredKey(id string) string {
 }
 
 // deviceNameExists whether the device exists by name
-func deviceNameExists(conn redis.Conn, name string) (bool, errors.EdgeX) {
+func deviceNameExists(conn rocksClient.Client, name string) (bool, errors.EdgeX) {
 	exists, err := objectNameExists(conn, DeviceCollectionName, name)
 	if err != nil {
 		return false, errors.NewCommonEdgeX(errors.KindDatabaseError, "device existence check by name failed", err)
@@ -41,7 +42,7 @@ func deviceNameExists(conn redis.Conn, name string) (bool, errors.EdgeX) {
 }
 
 // deviceIdExists checks whether the device exists by id
-func deviceIdExists(conn redis.Conn, id string) (bool, errors.EdgeX) {
+func deviceIdExists(conn rocksClient.Client, id string) (bool, errors.EdgeX) {
 	exists, err := objectIdExists(conn, deviceStoredKey(id))
 	if err != nil {
 		return false, errors.NewCommonEdgeX(errors.KindDatabaseError, "device existence check by id failed", err)

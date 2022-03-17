@@ -3,11 +3,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package rocks
+package grocksdb
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/linxGnu/grocksdb"
+	rocksClient "github.com/yuppne/edgex-go-jakarta/internal/pkg/db/rocks"
 
 	pkgCommon "github.com/yuppne/edgex-go-jakarta/internal/pkg/common"
 
@@ -16,7 +18,6 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 
 	"github.com/gomodule/redigo/redis"
-	// "github.com/tecbot/gorocksdb"
 )
 
 const (
@@ -33,7 +34,7 @@ func deviceProfileStoredKey(id string) string {
 }
 
 // deviceProfileNameExists whether the device profile exists by name
-func deviceProfileNameExists(conn redis.Conn, name string) (bool, errors.EdgeX) {
+func deviceProfileNameExists(conn rocksClient.Client, name string) (bool, errors.EdgeX) {
 	exists, err := objectNameExists(conn, DeviceProfileCollectionName, name)
 	if err != nil {
 		return false, errors.NewCommonEdgeXWrapper(err)
@@ -42,7 +43,7 @@ func deviceProfileNameExists(conn redis.Conn, name string) (bool, errors.EdgeX) 
 }
 
 // deviceProfileIdExists checks whether the device profile exists by id
-func deviceProfileIdExists(conn redis.Conn, id string) (bool, errors.EdgeX) {
+func deviceProfileIdExists(conn rocksClient.Client, id string) (bool, errors.EdgeX) {
 	exists, err := objectIdExists(conn, deviceProfileStoredKey(id))
 	if err != nil {
 		return false, errors.NewCommonEdgeXWrapper(err)
@@ -51,24 +52,30 @@ func deviceProfileIdExists(conn redis.Conn, id string) (bool, errors.EdgeX) {
 }
 
 // sendAddDeviceProfileCmd send redis command for adding device profile
-func sendAddDeviceProfileCmd(conn redis.Conn, storedKey string, dp models.DeviceProfile) errors.EdgeX {
+// 생성한 키를 갖고 넣어주는거같은데.
+func sendAddDeviceProfileCmd(conn rocksClient.Client, storedKey string, dp models.DeviceProfile) errors.EdgeX {
 	m, err := json.Marshal(dp)
 	if err != nil {
 		return errors.NewCommonEdgeX(errors.KindContractInvalid, "unable to JSON marshal device profile for Redis persistence", err)
 	}
-	_ = conn.Send(SET, storedKey, m)
-	_ = conn.Send(ZADD, DeviceProfileCollection, 0, storedKey)
-	_ = conn.Send(HSET, DeviceProfileCollectionName, dp.Name, storedKey)
-	_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionManufacturer, dp.Manufacturer), dp.Modified, storedKey)
-	_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionModel, dp.Model), dp.Modified, storedKey)
-	for _, label := range dp.Labels {
-		_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionLabel, label), dp.Modified, storedKey)
-	}
+
+	wo := grocksdb.NewDefaultWriteOptions()
+	db := conn.Database
+
+	// _ = conn.Send(SET, storedKey, m)
+	err = db.Put(wo, []byte(storedKey), m)
+	//_ = conn.Send(ZADD, DeviceProfileCollection, 0, storedKey)
+	//_ = conn.Send(HSET, DeviceProfileCollectionName, dp.Name, storedKey)
+	//_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionManufacturer, dp.Manufacturer), dp.Modified, storedKey)
+	//_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionModel, dp.Model), dp.Modified, storedKey)
+	//for _, label := range dp.Labels {
+	//	_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionLabel, label), dp.Modified, storedKey)
+	//}
 	return nil
 }
 
 // addDeviceProfile adds a device profile to DB
-func addDeviceProfile(conn redis.Conn, dp models.DeviceProfile) (models.DeviceProfile, errors.EdgeX) {
+func addDeviceProfile(conn rocksClient.Client, dp models.DeviceProfile) (models.DeviceProfile, errors.EdgeX) {
 	// query device profile name and id to avoid the conflict
 	exists, edgeXerr := deviceProfileIdExists(conn, dp.Id)
 	if edgeXerr != nil {
@@ -92,16 +99,20 @@ func addDeviceProfile(conn redis.Conn, dp models.DeviceProfile) (models.DevicePr
 	}
 	dp.Modified = ts
 
+	// db 키 생성
 	storedKey := deviceProfileStoredKey(dp.Id)
-	_ = conn.Send(MULTI)
+	// transactionDB로 해야하나?
+	// _ = conn.Send(MULTI)
+
+	// 디바이스 프로파일 추가하기 위해서 redis 명령어 보내. return null이 정상
 	edgeXerr = sendAddDeviceProfileCmd(conn, storedKey, dp)
 	if edgeXerr != nil {
 		return dp, errors.NewCommonEdgeXWrapper(edgeXerr)
 	}
-	_, err := conn.Do(EXEC)
-	if err != nil {
-		edgeXerr = errors.NewCommonEdgeX(errors.KindDatabaseError, "device profile creation failed", err)
-	}
+	//_, err := conn.Do(EXEC)
+	//if err != nil {
+	//	edgeXerr = errors.NewCommonEdgeX(errors.KindDatabaseError, "device profile creation failed", err)
+	//}
 
 	return dp, edgeXerr
 }

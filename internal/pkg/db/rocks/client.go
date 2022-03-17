@@ -11,32 +11,17 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  *******************************************************************************/
-//package redis
-//
-//import (
-//	"fmt"
-//	"github.com/yuppne/edgex-go-jakarta/internal/pkg/db"
-//	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
-//	"github.com/gomodule/redigo/redis"
-//	"os"
-//	"sync"
-//	"time"
-//)
 
-package gorocksdb
+package grocksdb
 
 // #include <stdlib.h>
 // #include "rocksdb/c.h"
 import "C"
 import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
-	"github.com/yuppne/edgex-go-jakarta/internal/pkg/db"
-	"github.com/yuppne/gorocksdb"
-
-	// "github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
-	// "github.com/yuppne/edgex-go-jakarta/internal/pkg/db"
 	"github.com/linxGnu/grocksdb"
-	//_ "github.com/yuppne/gorocksdb"
+	"github.com/yuppne/edgex-go-jakarta/internal/pkg/db"
+
 	"sync"
 )
 
@@ -44,29 +29,28 @@ var currClient *Client // a singleton so Readings can be de-referenced
 var once sync.Once
 
 type Client struct {
-	database      *gorocksdb.DB
+	Database      *grocksdb.DB
 	loggingClient logger.LoggingClient
 }
 
-// OpenDb opens a database with the specified options.
+// NewClient OpenDb opens a database with the specified options.
 func NewClient(config db.Configuration, lc logger.LoggingClient) (*Client, error) {
+	once.Do(func() {
+		bbto := grocksdb.NewDefaultBlockBasedTableOptions()
+		bbto.SetBlockCache(grocksdb.NewLRUCache(3 << 30))
 
-	bbto := grocksdb.NewDefaultBlockBasedTableOptions()
-	bbto.SetBlockCache(grocksdb.NewLRUCache(3 << 30))
+		opts := grocksdb.NewDefaultOptions()
+		opts.SetBlockBasedTableFactory(bbto)
+		opts.SetCreateIfMissing(true)
 
-	opts := grocksdb.NewDefaultOptions()
-	opts.SetBlockBasedTableFactory(bbto)
-	opts.SetCreateIfMissing(true)
+		db, _ := grocksdb.OpenDb(opts, "/path/to/db")
+		defer db.Close()
 
-	db, _ := grocksdb.OpenDb(opts, "/path/to/db")
-	defer db.Close()
-
-	currClient = &Client{
-		database:      db,
-		loggingClient: lc,
-	}
+		currClient = &Client{
+			Database:      db,
+			loggingClient: lc,
+		}
+	})
 
 	return currClient, nil
-
 }
-
