@@ -22,10 +22,10 @@ import (
 
 const (
 	DeviceProfileCollection             = "md|dp"
-	DeviceProfileCollectionName         = DeviceProfileCollection + DBKeySeparator + common.Name
-	DeviceProfileCollectionLabel        = DeviceProfileCollection + DBKeySeparator + common.Label
-	DeviceProfileCollectionModel        = DeviceProfileCollection + DBKeySeparator + common.Model
-	DeviceProfileCollectionManufacturer = DeviceProfileCollection + DBKeySeparator + common.Manufacturer
+	DeviceProfileCollectionName         = DeviceProfileCollection + DBKeySeparator + common.Name         // md|dp:name
+	DeviceProfileCollectionLabel        = DeviceProfileCollection + DBKeySeparator + common.Label        // md|dp:Label
+	DeviceProfileCollectionModel        = DeviceProfileCollection + DBKeySeparator + common.Model        // md|dp:Model
+	DeviceProfileCollectionManufacturer = DeviceProfileCollection + DBKeySeparator + common.Manufacturer // md|dp:Manufacturer
 )
 
 // deviceProfileStoredKey return the device profile's stored key which combines the collection name and object id
@@ -63,14 +63,20 @@ func sendAddDeviceProfileCmd(conn rocksClient.Client, storedKey string, dp model
 	db := conn.Database
 
 	// _ = conn.Send(SET, storedKey, m)
-	err = db.Put(wo, []byte(storedKey), m)
+	_ = db.Put(wo, []byte(storedKey), m)
 	//_ = conn.Send(ZADD, DeviceProfileCollection, 0, storedKey)
+	_ = db.Put(wo, []byte(DeviceCollection), []byte(storedKey))
 	//_ = conn.Send(HSET, DeviceProfileCollectionName, dp.Name, storedKey)
+	_ = db.Put(wo, []byte(DeviceCollectionName), []byte(dp.Name))
+	_ = db.Put(wo, []byte(dp.Name), []byte(storedKey))
 	//_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionManufacturer, dp.Manufacturer), dp.Modified, storedKey)
+	_ = db.Put(wo, []byte(CreateKey(DeviceProfileCollectionManufacturer)), []byte(storedKey))
 	//_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionModel, dp.Model), dp.Modified, storedKey)
-	//for _, label := range dp.Labels {
-	//	_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionLabel, label), dp.Modified, storedKey)
-	//}
+	_ = db.Put(wo, []byte(CreateKey(DeviceProfileCollectionModel, dp.Model)), []byte(storedKey))
+	for _, label := range dp.Labels {
+		// _ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionLabel, label), dp.Modified, storedKey)
+		_ = db.Put(wo, []byte(CreateKey(DeviceProfileCollectionLabel, label)), []byte(storedKey))
+	}
 	return nil
 }
 
@@ -139,18 +145,25 @@ func deviceProfileByName(conn rocksClient.Client, name string) (deviceProfile mo
 func sendDeleteDeviceProfileCmd(conn rocksClient.Client, storedKey string, dp models.DeviceProfile) {
 	wo := grocksdb.NewDefaultWriteOptions()
 	db := conn.Database
-	err := db.Delete(wo, []byte(storedKey))
+
 	//_ = conn.Send(DEL, storedKey)
+	_ = db.Delete(wo, []byte(storedKey))
+
+	//삭제하는거
 	//_ = conn.Send(ZREM, DeviceProfileCollection, storedKey)
+	_ = db.Delete(wo, []byte(DeviceProfileCollection))
 	//_ = conn.Send(HDEL, DeviceProfileCollectionName, dp.Name)
+	_ = db.Delete(wo, []byte(DeviceProfileCollectionName))
+	_ = db.Delete(wo, []byte(dp.Name))
 	//_ = conn.Send(ZREM, CreateKey(DeviceProfileCollectionManufacturer, dp.Manufacturer), storedKey)
+	_ = db.Delete(wo, []byte(CreateKey(DeviceProfileCollectionManufacturer, dp.Manufacturer)))
 	//_ = conn.Send(ZREM, CreateKey(DeviceProfileCollectionModel, dp.Model), storedKey)
-	//for _, label := range dp.Labels {
-	//	_ = conn.Send(ZREM, CreateKey(DeviceProfileCollectionLabel, label), storedKey)
-	//}
-	if err != nil {
-		return
+	_ = db.Delete(wo, []byte(CreateKey(DeviceProfileCollectionModel, dp.Model)))
+	for _, label := range dp.Labels {
+		//_ = conn.Send(ZREM, CreateKey(DeviceProfileCollectionLabel, label), storedKey)
+		_ = db.Delete(wo, []byte(CreateKey(DeviceProfileCollectionLabel, label)))
 	}
+
 }
 
 func deleteDeviceProfile(conn rocksClient.Client, dp models.DeviceProfile) errors.EdgeX {
@@ -293,6 +306,8 @@ func deviceProfilesByManufacturerAndModel(conn rocksClient.Client, offset int, l
 
 	idsSlice := make([][]string, 2)
 	// query ids by manufacturer
+	// 0 -1 : 전체 조회
+	// grocksdb: For bulk reads, use an Iterator.
 	idsWithManufacturer, err := redis.Strings(conn.Do(ZREVRANGE, CreateKey(DeviceProfileCollectionManufacturer, manufacturer), 0, -1))
 	if err != nil {
 		return nil, totalCount, errors.NewCommonEdgeX(errors.KindDatabaseError, fmt.Sprintf("query object ids by manufacturer %s from database failed", manufacturer), err)

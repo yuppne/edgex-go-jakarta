@@ -172,6 +172,7 @@ func getObjectsByIds(conn rocksClient.Client, ids []interface{}) ([][]byte, erro
 }
 
 // objectNameExists checks whether the object name exists or not in the specified hashKey
+// exists, err := objectNameExists(conn, DeviceProfileCollectionName, name)
 func objectNameExists(conn rocksClient.Client, hashKey string, name string) (bool, errors.EdgeX) {
 	exists, err := redis.Bool(conn.Do(HEXISTS, hashKey, name))
 	if err != nil {
