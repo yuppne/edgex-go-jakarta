@@ -133,7 +133,7 @@ github.com/leodido/go-urn
 github.com/lib/pq
 github.com/lib/pq/oid
 github.com/lib/pq/scram
-# github.com/linxGnu/grocksdb v1.6.48
+# github.com/linxGnu/grocksdb v1.7.0
 ## explicit
 github.com/linxGnu/grocksdb
 # github.com/mattn/go-colorable v0.1.6
@@ -166,9 +166,6 @@ github.com/stretchr/testify/mock
 github.com/stretchr/testify/require
 # github.com/x448/float16 v0.8.4
 github.com/x448/float16
-# github.com/yuppne/gorocksdb v0.0.0-20191217155057-f0fad39f321c
-## explicit
-github.com/yuppne/gorocksdb
 # golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
 ## explicit
 golang.org/x/crypto/hkdf
