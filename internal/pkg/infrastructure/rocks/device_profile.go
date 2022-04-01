@@ -115,6 +115,7 @@ func addDeviceProfile(conn rocksClient.Client, dp models.DeviceProfile) (models.
 	if edgeXerr != nil {
 		return dp, errors.NewCommonEdgeXWrapper(edgeXerr)
 	}
+
 	//_, err := conn.Do(EXEC)
 	//if err != nil {
 	//	edgeXerr = errors.NewCommonEdgeX(errors.KindDatabaseError, "device profile creation failed", err)

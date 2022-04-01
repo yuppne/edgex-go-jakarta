@@ -36,6 +36,7 @@ type Client struct {
 // NewClient OpenDb opens a database with the specified options.
 func NewClient(config db.Configuration, lc logger.LoggingClient) (*Client, error) {
 	once.Do(func() {
+		// NewDefaultBlockBasedTableOptions creates a default BlockBasedTableOptions object.
 		bbto := grocksdb.NewDefaultBlockBasedTableOptions()
 		bbto.SetBlockCache(grocksdb.NewLRUCache(3 << 30))
 

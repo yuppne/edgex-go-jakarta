@@ -171,6 +171,7 @@ func deviceServicesByLabels(conn redis.Conn, offset int, limit int, labels []str
 		return deviceServices, errors.NewCommonEdgeXWrapper(err)
 	}
 
+	// make(): 동적 크기의 배열을 생성하는 방법
 	deviceServices = make([]models.DeviceService, len(objects))
 	for i, in := range objects {
 		s := models.DeviceService{}
