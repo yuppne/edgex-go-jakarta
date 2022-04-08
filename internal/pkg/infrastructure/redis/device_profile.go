@@ -16,7 +16,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 
 	"github.com/gomodule/redigo/redis"
-	// "github.com/tecbot/gorocksdb"
+	_ "github.com/linxGnu/grocksdb"
 )
 
 const (
@@ -255,7 +255,7 @@ func deviceProfilesByManufacturer(conn redis.Conn, offset int, limit int, manufa
 	deviceProfiles = make([]models.DeviceProfile, len(objects))
 	for i, in := range objects {
 		dp := models.DeviceProfile{}
-		err := json.Unmarshal(in, &dp)
+		err := json.Unmarshal(in, &dp) //byte ->
 		if err != nil {
 			return deviceProfiles, errors.NewCommonEdgeX(errors.KindContractInvalid, "device profile parsing failed", err)
 		}
