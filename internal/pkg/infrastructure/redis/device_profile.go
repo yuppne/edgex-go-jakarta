@@ -8,6 +8,7 @@ package redis
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 
 	pkgCommon "github.com/yuppne/edgex-go-jakarta/internal/pkg/common"
 
@@ -58,7 +59,17 @@ func sendAddDeviceProfileCmd(conn redis.Conn, storedKey string, dp models.Device
 		return errors.NewCommonEdgeX(errors.KindContractInvalid, "unable to JSON marshal device profile for Redis persistence", err)
 	}
 	_ = conn.Send(SET, storedKey, m)
-	rocksexample.ExampleConnectRocksDB()
+	// **************************** MY CODE ***************************
+	value, err2 := rocksexample.ExampleConnectRocksDB()
+	str1 := "@@@@@@@@@@@@@@@@ device profile @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+	value2 := str1 + string(value.Data())
+	// lc.Debug(fmt.Sprintf(value2))
+	if err2 != nil {
+		fmt.Println("error")
+	}
+
+	log.Println(value2)
+	// *************************** MY CODE ****************************
 	_ = conn.Send(ZADD, DeviceProfileCollection, 0, storedKey)
 	_ = conn.Send(HSET, DeviceProfileCollectionName, dp.Name, storedKey)
 	_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionManufacturer, dp.Manufacturer), dp.Modified, storedKey)

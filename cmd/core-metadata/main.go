@@ -15,7 +15,6 @@ package main
 
 import (
 	"context"
-
 	"github.com/yuppne/edgex-go-jakarta/internal/core/metadata"
 
 	"github.com/gorilla/mux"

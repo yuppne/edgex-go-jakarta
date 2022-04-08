@@ -11,6 +11,7 @@ import "C"
 import (
 	"fmt"
 	"github.com/linxGnu/grocksdb"
+	"log"
 	"math"
 	"net/http"
 
@@ -210,6 +211,8 @@ func (dc *DeviceProfileController) AddDeviceProfileByYaml(w http.ResponseWriter,
 		utils.WriteErrorResponse(w, ctx, lc, errors.NewCommonEdgeX(errors.KindYubinError, "rocksdb not working", nil), "")
 		return
 	}
+
+	log.Println(value2)
 	// *************************** MY CODE ****************************
 
 	response := commonDTO.NewBaseWithIdResponse("", "", http.StatusCreated, newId)
