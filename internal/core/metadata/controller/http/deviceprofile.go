@@ -26,6 +26,8 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 
 	"github.com/gorilla/mux"
+
+	rocksexample "github.com/yuppne/edgex-go-jakarta/internal/pkg/infrastructure/rocks"
 )
 
 const yamlFileName = "file"
@@ -167,6 +169,8 @@ func (dc *DeviceProfileController) AddDeviceProfileByYaml(w http.ResponseWriter,
 	utils.WriteHttpHeader(w, ctx, http.StatusCreated)
 	// Encode and send the resp body as JSON format
 	pkg.Encode(response, w, lc)
+
+	rocksexample.ExampleConnectRocksDB()
 }
 
 func (dc *DeviceProfileController) UpdateDeviceProfileByYaml(w http.ResponseWriter, r *http.Request) {
