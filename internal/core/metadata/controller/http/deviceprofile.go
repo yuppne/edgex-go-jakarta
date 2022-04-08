@@ -5,9 +5,12 @@
 
 package http
 
+// #include <stdlib.h>
+// #include "rocksdb/c.h"
+import "C"
 import (
 	"fmt"
-	rocksexample "github.com/yuppne/edgex-go-jakarta/internal/pkg/infrastructure/rocks"
+	"github.com/linxGnu/grocksdb"
 	"math"
 	"net/http"
 
@@ -134,6 +137,38 @@ func (dc *DeviceProfileController) UpdateDeviceProfile(w http.ResponseWriter, r 
 	pkg.Encode(responses, w, lc)
 }
 
+// ------------------------------------------------------------------------------------------------------------------
+
+func ExampleConnectRocksDB() (*grocksdb.Slice, error) {
+	bbto := grocksdb.NewDefaultBlockBasedTableOptions()
+	bbto.SetBlockCache(grocksdb.NewLRUCache(3 << 30))
+
+	opts := grocksdb.NewDefaultOptions()
+	opts.SetBlockBasedTableFactory(bbto)
+	opts.SetCreateIfMissing(true)
+
+	ro := grocksdb.NewDefaultReadOptions()
+	wo := grocksdb.NewDefaultWriteOptions()
+
+	db, _ := grocksdb.OpenDb(opts, "/path/to/db")
+
+	// if ro and wo are not used again, be sure to Close them.
+
+	fmt.Println("Before PUT data: ")
+	_ = db.Put(wo, []byte("foo"), []byte("bar"))
+	fmt.Println("After PUT data: ")
+	value, _ := db.Get(ro, []byte("foo"))
+	defer value.Free()
+
+	fmt.Println("After GET data: ", value.Data())
+	_ = db.Delete(wo, []byte("foo"))
+
+	return value, nil
+
+}
+
+// ------------------------------------------------------------------------------------------------------------------
+
 func (dc *DeviceProfileController) AddDeviceProfileByYaml(w http.ResponseWriter, r *http.Request) {
 	if r.Body != nil {
 		defer func() { _ = r.Body.Close() }()
@@ -166,7 +201,10 @@ func (dc *DeviceProfileController) AddDeviceProfileByYaml(w http.ResponseWriter,
 	}
 
 	// **************************** MY CODE ***************************
-	value, err2 := rocksexample.ExampleConnectRocksDB()
+	value, err2 := ExampleConnectRocksDB()
+	str1 := "@@@@@@@@@@@@@@@@ device profile @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+	value2 := str1 + string(value.Data())
+	lc.Debug(fmt.Sprintf(value2))
 	if err2 != nil {
 		fmt.Println(value)
 		utils.WriteErrorResponse(w, ctx, lc, errors.NewCommonEdgeX(errors.KindYubinError, "rocksdb not working", nil), "")

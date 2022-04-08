@@ -23,6 +23,7 @@ func ExampleConnectRocksDB() (*grocksdb.Slice, error) {
 	db, _ := grocksdb.OpenDb(opts, "/path/to/db")
 
 	// if ro and wo are not used again, be sure to Close them.
+
 	fmt.Println("Before PUT data: ")
 	_ = db.Put(wo, []byte("foo"), []byte("bar"))
 	fmt.Println("After PUT data: ")
