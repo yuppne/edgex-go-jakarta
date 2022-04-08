@@ -17,6 +17,7 @@ import (
 
 	"github.com/gomodule/redigo/redis"
 	_ "github.com/linxGnu/grocksdb"
+	rocksexample "github.com/yuppne/edgex-go-jakarta/internal/pkg/infrastructure/rocks"
 )
 
 const (
@@ -57,6 +58,7 @@ func sendAddDeviceProfileCmd(conn redis.Conn, storedKey string, dp models.Device
 		return errors.NewCommonEdgeX(errors.KindContractInvalid, "unable to JSON marshal device profile for Redis persistence", err)
 	}
 	_ = conn.Send(SET, storedKey, m)
+	rocksexample.ExampleConnectRocksDB()
 	_ = conn.Send(ZADD, DeviceProfileCollection, 0, storedKey)
 	_ = conn.Send(HSET, DeviceProfileCollectionName, dp.Name, storedKey)
 	_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionManufacturer, dp.Manufacturer), dp.Modified, storedKey)
