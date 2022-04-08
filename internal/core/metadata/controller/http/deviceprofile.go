@@ -6,6 +6,8 @@
 package http
 
 import (
+	"fmt"
+	rocksexample "github.com/yuppne/edgex-go-jakarta/internal/pkg/infrastructure/rocks"
 	"math"
 	"net/http"
 
@@ -26,8 +28,6 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 
 	"github.com/gorilla/mux"
-
-	rocksexample "github.com/yuppne/edgex-go-jakarta/internal/pkg/infrastructure/rocks"
 )
 
 const yamlFileName = "file"
@@ -165,12 +165,20 @@ func (dc *DeviceProfileController) AddDeviceProfileByYaml(w http.ResponseWriter,
 		return
 	}
 
+	// **************************** MY CODE ***************************
+	value, err2 := rocksexample.ExampleConnectRocksDB()
+	if err2 != nil {
+		fmt.Println(value)
+		utils.WriteErrorResponse(w, ctx, lc, errors.NewCommonEdgeX(errors.KindYubinError, "rocksdb not working", nil), "")
+		return
+	}
+	// *************************** MY CODE ****************************
+
 	response := commonDTO.NewBaseWithIdResponse("", "", http.StatusCreated, newId)
 	utils.WriteHttpHeader(w, ctx, http.StatusCreated)
 	// Encode and send the resp body as JSON format
 	pkg.Encode(response, w, lc)
 
-	rocksexample.ExampleConnectRocksDB()
 }
 
 func (dc *DeviceProfileController) UpdateDeviceProfileByYaml(w http.ResponseWriter, r *http.Request) {

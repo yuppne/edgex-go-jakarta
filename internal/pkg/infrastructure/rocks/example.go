@@ -9,7 +9,7 @@ import (
 	_ "unsafe"
 )
 
-func ExampleConnectRocksDB() {
+func ExampleConnectRocksDB() (*grocksdb.Slice, error) {
 	bbto := grocksdb.NewDefaultBlockBasedTableOptions()
 	bbto.SetBlockCache(grocksdb.NewLRUCache(3 << 30))
 
@@ -27,9 +27,11 @@ func ExampleConnectRocksDB() {
 	_ = db.Put(wo, []byte("foo"), []byte("bar"))
 	fmt.Println("After PUT data: ")
 	value, _ := db.Get(ro, []byte("foo"))
-	fmt.Println("After GET data: ", value.Data())
 	defer value.Free()
 
+	fmt.Println("After GET data: ", value.Data())
 	_ = db.Delete(wo, []byte("foo"))
+
+	return value, nil
 
 }

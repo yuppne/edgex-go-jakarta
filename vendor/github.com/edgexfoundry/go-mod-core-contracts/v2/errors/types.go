@@ -35,6 +35,7 @@ const (
 	KindIOError             ErrKind = "IOError"
 	KindOverflowError       ErrKind = "OverflowError"
 	KindNaNError            ErrKind = "NaNError"
+	KindYubinError			ErrKind = "YubinCheerUp"
 )
 
 // EdgeX provides an abstraction for all internal EdgeX errors.
