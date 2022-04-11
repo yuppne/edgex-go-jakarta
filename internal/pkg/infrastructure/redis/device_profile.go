@@ -18,7 +18,6 @@ import (
 
 	"github.com/gomodule/redigo/redis"
 	_ "github.com/linxGnu/grocksdb"
-	rocksexample "github.com/yuppne/edgex-go-jakarta/internal/pkg/infrastructure/rocks"
 )
 
 const (
@@ -60,12 +59,14 @@ func sendAddDeviceProfileCmd(conn redis.Conn, storedKey string, dp models.Device
 	}
 	_ = conn.Send(SET, storedKey, m)
 	// **************************** MY CODE ***************************
-	value, err2 := rocksexample.ExampleConnectRocksDB()
-	str1 := "@@@@@@@@@@@@@@@@ device profile @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+	value, err2 := ExampleConnectRocksDB()
+	str1 := "@@@@@@@@@@@@@@@@ device profile @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n"
 	value2 := str1 + string(value.Data())
 	// lc.Debug(fmt.Sprintf(value2))
+	log.Println("This is from internal/pkg/infrastructure/redis/device_profile.go")
+	fmt.Println("sendAddDeviceProfileCmd error")
 	if err2 != nil {
-		fmt.Println("error")
+		fmt.Println("sendAddDeviceProfileCmd error")
 	}
 
 	log.Println(value2)

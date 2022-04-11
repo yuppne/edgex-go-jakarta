@@ -44,7 +44,7 @@ func NewClient(config db.Configuration, lc logger.LoggingClient) (*Client, error
 		opts.SetBlockBasedTableFactory(bbto)
 		opts.SetCreateIfMissing(true)
 
-		db, _ := grocksdb.OpenDb(opts, "/path/to/db")
+		db, _ := grocksdb.OpenDb(opts, "/home/yubin/grocksdb")
 		defer db.Close()
 
 		currClient = &Client{

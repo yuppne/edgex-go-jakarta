@@ -14,7 +14,6 @@ import (
 	bootstrapInterfaces "github.com/yuppne/edgex-go-jakarta/internal/pkg/bootstrap/interfaces"
 	"github.com/yuppne/edgex-go-jakarta/internal/pkg/db"
 	"github.com/yuppne/edgex-go-jakarta/internal/pkg/infrastructure/redis"
-	rocks "github.com/yuppne/edgex-go-jakarta/internal/pkg/infrastructure/rocks"
 	"github.com/yuppne/edgex-go-jakarta/internal/pkg/interfaces"
 
 	bootstrapContainer "github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
@@ -61,14 +60,14 @@ func (d Database) newDBClient(
 				Password: credentials.Password,
 			},
 			lc)
-	case "rocksdb":
-		return rocks.NewClient(
-			db.Configuration{
-				Host:     databaseInfo.Host,
-				Port:     databaseInfo.Port,
-				Password: credentials.Password,
-			},
-			lc)
+	//case "rocksdb":
+	//	return rocks.NewClient(
+	//		db.Configuration{
+	//			Host:     databaseInfo.Host,
+	//			Port:     databaseInfo.Port,
+	//			Password: credentials.Password,
+	//		},
+	//		lc)
 	default:
 		return nil, db.ErrUnsupportedDatabase
 	}

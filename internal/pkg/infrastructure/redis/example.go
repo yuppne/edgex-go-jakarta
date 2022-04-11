@@ -1,4 +1,4 @@
-package grocksdb
+package redis
 
 // #include <stdlib.h>
 // #include "rocksdb/c.h"
