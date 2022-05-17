@@ -128,14 +128,13 @@ func (opts *BlockBasedTableOptions) SetBlockRestartInterval(blockRestartInterval
 // SetFilterPolicy sets the filter policy opts reduce disk reads.
 // Many applications will benefit from passing the result of
 // NewBloomFilterPolicy() here.
+//
+// Note: this op is `move`, fp is no longer usable.
+//
 // Default: nil
-func (opts *BlockBasedTableOptions) SetFilterPolicy(fp FilterPolicy) {
-	if nfp, ok := fp.(nativeFilterPolicy); ok {
-		opts.cFp = nfp.c
-	} else {
-		idx := registerFilterPolicy(fp)
-		opts.cFp = C.gorocksdb_filterpolicy_create(C.uintptr_t(idx))
-	}
+func (opts *BlockBasedTableOptions) SetFilterPolicy(fp *NativeFilterPolicy) {
+	opts.cFp = fp.c
+	fp.c = nil
 	C.rocksdb_block_based_options_set_filter_policy(opts.c, opts.cFp)
 }
 
@@ -259,14 +258,6 @@ func (opts *BlockBasedTableOptions) SetUseDeltaEncoding(value bool) {
 // tables, the information about version is read from the footer.
 func (opts *BlockBasedTableOptions) SetFormatVersion(value int) {
 	C.rocksdb_block_based_options_set_format_version(opts.c, C.int(value))
-}
-
-// SetHashIndexAllowCollision set allows hash-index collision.
-//
-// Deprecated: no matter what value it is set to,
-// it will behave as if hash_index_allow_collision=true.
-func (opts *BlockBasedTableOptions) SetHashIndexAllowCollision(value bool) {
-	C.rocksdb_block_based_options_set_hash_index_allow_collision(opts.c, boolToChar(value))
 }
 
 // SetCacheIndexAndFilterBlocksWithHighPriority if cache_index_and_filter_blocks is enabled,
