@@ -17,15 +17,10 @@ import (
 // DeviceProfile and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/DeviceProfile
 type DeviceProfile struct {
-	DBTimestamp     `json:",inline"`
-	Id              string           `json:"id" validate:"omitempty,uuid"`
-	Name            string           `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Manufacturer    string           `json:"manufacturer" yaml:"manufacturer"`
-	Description     string           `json:"description" yaml:"description"`
-	Model           string           `json:"model" yaml:"model"`
-	Labels          []string         `json:"labels" yaml:"labels,flow"`
-	DeviceResources []DeviceResource `json:"deviceResources" yaml:"deviceResources" validate:"required,gt=0,dive"`
-	DeviceCommands  []DeviceCommand  `json:"deviceCommands" yaml:"deviceCommands" validate:"dive"`
+	DBTimestamp            `json:",inline"`
+	DeviceProfileBasicInfo `json:",inline" yaml:",inline"`
+	DeviceResources        []DeviceResource `json:"deviceResources" yaml:"deviceResources" validate:"dive"`
+	DeviceCommands         []DeviceCommand  `json:"deviceCommands" yaml:"deviceCommands" validate:"dive"`
 }
 
 // Validate satisfies the Validator interface
@@ -41,14 +36,9 @@ func (dp *DeviceProfile) Validate() error {
 func (dp *DeviceProfile) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var alias struct {
 		DBTimestamp
-		Id              string           `yaml:"id"`
-		Name            string           `yaml:"name"`
-		Manufacturer    string           `yaml:"manufacturer"`
-		Description     string           `yaml:"description"`
-		Model           string           `yaml:"model"`
-		Labels          []string         `yaml:"labels"`
-		DeviceResources []DeviceResource `yaml:"deviceResources"`
-		DeviceCommands  []DeviceCommand  `yaml:"deviceCommands"`
+		DeviceProfileBasicInfo `yaml:",inline"`
+		DeviceResources        []DeviceResource `yaml:"deviceResources"`
+		DeviceCommands         []DeviceCommand  `yaml:"deviceCommands"`
 	}
 	if err := unmarshal(&alias); err != nil {
 		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to unmarshal request body as YAML.", err)
@@ -88,13 +78,15 @@ func ToDeviceProfileModel(deviceProfileDTO DeviceProfile) models.DeviceProfile {
 // FromDeviceProfileModelToDTO transforms the DeviceProfile Model to the DeviceProfile DTO
 func FromDeviceProfileModelToDTO(deviceProfile models.DeviceProfile) DeviceProfile {
 	return DeviceProfile{
-		DBTimestamp:     DBTimestamp(deviceProfile.DBTimestamp),
-		Id:              deviceProfile.Id,
-		Name:            deviceProfile.Name,
-		Description:     deviceProfile.Description,
-		Manufacturer:    deviceProfile.Manufacturer,
-		Model:           deviceProfile.Model,
-		Labels:          deviceProfile.Labels,
+		DBTimestamp: DBTimestamp(deviceProfile.DBTimestamp),
+		DeviceProfileBasicInfo: DeviceProfileBasicInfo{
+			Id:           deviceProfile.Id,
+			Name:         deviceProfile.Name,
+			Description:  deviceProfile.Description,
+			Manufacturer: deviceProfile.Manufacturer,
+			Model:        deviceProfile.Model,
+			Labels:       deviceProfile.Labels,
+		},
 		DeviceResources: FromDeviceResourceModelsToDTOs(deviceProfile.DeviceResources),
 		DeviceCommands:  FromDeviceCommandModelsToDTOs(deviceProfile.DeviceCommands),
 	}
@@ -153,7 +145,7 @@ func validReadWritePermission(resources []DeviceResource, name string, readWrite
 	valid := true
 	for _, resource := range resources {
 		if resource.Name == name {
-			if resource.Properties.ReadWrite != common.ReadWrite_RW &&
+			if resource.Properties.ReadWrite != common.ReadWrite_RW && resource.Properties.ReadWrite != common.ReadWrite_WR &&
 				resource.Properties.ReadWrite != readWrite {
 				valid = false
 				break

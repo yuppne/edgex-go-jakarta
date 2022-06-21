@@ -1,5 +1,8 @@
+//go:build !windows
+// +build !windows
+
 //
-// Copyright (c) 2019 Intel Corporation
+// Copyright (c) 2021 Intel Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -105,8 +108,8 @@ func (client *zeromqClient) Subscribe(topics []types.TopicChannel, messageErrors
 	var errorsSubscribe []error
 	var err error
 
-	for idx, topic := range topics {
-		client.subscribers[idx], err = client.subscribeTopic(&topic)
+	for idx := range topics {
+		client.subscribers[idx], err = client.subscribeTopic(&topics[idx])
 		if err != nil {
 			errorsSubscribe = append(errorsSubscribe, err)
 		}

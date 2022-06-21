@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright 2019 Dell Inc.
- * Copyright 2021 Intel Inc.
+ * Copyright 2022 Intel Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -20,9 +20,10 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"path/filepath"
+	"math"
 	"reflect"
 	"sync"
+	"time"
 
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/container"
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/bootstrap/environment"
@@ -125,7 +126,7 @@ func (cp *Processor) Process(
 	// the Secret Provider can be initialized and added to the DIC, but only if it is configured to be used.
 	var secretProvider interfaces.SecretProvider
 	if useSecretProvider {
-		secretProvider, err = secret.NewSecretProvider(serviceConfig, cp.ctx, cp.startupTimer, cp.dic)
+		secretProvider, err = secret.NewSecretProvider(serviceConfig, cp.ctx, cp.startupTimer, cp.dic, serviceKey)
 		if err != nil {
 			return fmt.Errorf("failed to create SecretProvider: %s", err.Error())
 		}
@@ -308,6 +309,8 @@ func (cp *Processor) ListenForCustomConfigChanges(
 
 		configClient.WatchForChanges(updateStream, errorStream, configToWatch, sectionName)
 
+		isFirstUpdate := true
+
 		for {
 			select {
 			case <-cp.ctx.Done():
@@ -319,6 +322,14 @@ func (cp *Processor) ListenForCustomConfigChanges(
 				cp.lc.Error(ex.Error())
 
 			case raw := <-updateStream:
+				// Config Provider sends an update as soon as the watcher is connected even though there are not
+				// any changes to the configuration. This causes an issue during start-up if there is an
+				// envVars override of one of the Writable fields, so we must ignore the first update.
+				if isFirstUpdate {
+					isFirstUpdate = false
+					continue
+				}
+
 				cp.lc.Infof("Updated custom configuration '%s' has been received from the Configuration Provider", sectionName)
 				changedCallback(raw)
 			}
@@ -336,7 +347,14 @@ func (cp *Processor) createProviderClient(
 	providerConfig types.ServiceConfig) (configuration.Client, error) {
 
 	var err error
-	providerConfig.BasePath = filepath.Join(configStem, ConfigVersion, serviceKey)
+
+	// The passed in configStem already contains the trailing '/' in most cases so must verify and add if missing.
+	if configStem[len(configStem)-1] != '/' {
+		configStem = configStem + "/"
+	}
+
+	// Note: Can't use filepath.Join as it uses `\` on Windows which Consul doesn't recognize as a path separator.
+	providerConfig.BasePath = fmt.Sprintf("%s%s/%s", configStem, ConfigVersion, serviceKey)
 	if getAccessToken != nil {
 		providerConfig.AccessToken, err = getAccessToken()
 		if err != nil {
@@ -467,6 +485,7 @@ func (cp *Processor) listenForChanges(serviceConfig interfaces.Configuration, co
 
 				previousInsecureSecrets := serviceConfig.GetInsecureSecrets()
 				previousLogLevel := serviceConfig.GetLogLevel()
+				previousTelemetryInterval := serviceConfig.GetTelemetryInfo().Interval
 
 				if !serviceConfig.UpdateWritableFromRaw(raw) {
 					lc.Error("ListenForChanges() type check failed")
@@ -475,6 +494,7 @@ func (cp *Processor) listenForChanges(serviceConfig interfaces.Configuration, co
 
 				currentInsecureSecrets := serviceConfig.GetInsecureSecrets()
 				currentLogLevel := serviceConfig.GetLogLevel()
+				currentTelemetryInterval := serviceConfig.GetTelemetryInfo().Interval
 
 				lc.Info("Writeable configuration has been updated from the Configuration Provider")
 
@@ -493,6 +513,27 @@ func (cp *Processor) listenForChanges(serviceConfig interfaces.Configuration, co
 					if secretProvider != nil {
 						secretProvider.SecretsUpdated()
 					}
+
+				case currentTelemetryInterval != previousTelemetryInterval:
+					lc.Info("Telemetry interval has been updated. Processing new value...")
+					interval, err := time.ParseDuration(currentTelemetryInterval)
+					if err != nil {
+						lc.Errorf("update telemetry interval value is invalid time duration, using previous value: %s", err.Error())
+						break
+					}
+
+					if interval == 0 {
+						lc.Infof("0 specified for metrics reporting interval. Setting to max duration to effectively disable reporting.")
+						interval = math.MaxInt64
+					}
+
+					metricsManager := container.MetricsManagerFrom(cp.dic.Get)
+					if metricsManager == nil {
+						lc.Error("metrics manager not available while updating telemetry interval")
+						break
+					}
+
+					metricsManager.ResetInterval(interval)
 
 				default:
 					// Signal that configuration updates exists that have not already been processed.

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright 2018 Dell Inc.
- * Copyright 2020 Intel Inc.
+ * Copyright 2022 Intel Inc.
  * Copyright 2021 IOTech Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -18,6 +18,7 @@ package config
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 
@@ -43,7 +44,7 @@ type ServiceInfo struct {
 	// MaxResultCount specifies the maximum size list supported
 	// in response to REST calls to other services.
 	MaxResultCount int
-	// MaxRequestSize defines the maximum size of http request body in bytes
+	// MaxRequestSize defines the maximum size of http request body in kilobytes
 	MaxRequestSize int64
 	// RequestTimeout specifies a timeout (in milliseconds) for
 	// processing REST request calls from other services.
@@ -145,6 +146,9 @@ type SecretStoreInfo struct {
 	// DisableScrubSecretsFile specifies to not scrub secrets file after importing. Service will fail start-up if
 	// not disabled and file can not be written.
 	DisableScrubSecretsFile bool
+
+	// RuntimeTokenProvider is optional if not using delayed start from spiffe-token provider
+	RuntimeTokenProvider types.RuntimeTokenProviderInfo
 }
 
 type Database struct {
@@ -219,4 +223,37 @@ type MessageBusInfo struct {
 // URL constructs a URL from the protocol, host and port and returns that as a string.
 func (p MessageBusInfo) URL() string {
 	return fmt.Sprintf("%s://%s:%v", p.Protocol, p.Host, p.Port)
+}
+
+// TelemetryInfo contains the configuration for a service's metrics collection
+type TelemetryInfo struct {
+	// Interval is the time duration in which to collect and report the service's metrics
+	Interval string
+	// PublishTopicPrefix is the base topic in which to publish (report) the service's metrics to the EdgeX MessageBus
+	// The service name and the metric name are appended to this base topic. i.e. <prefix>/<service-name>/<metric-name>
+	PublishTopicPrefix string
+	// Metrics is the list of service's metrics that can be collected. Each of the service's metrics must be in the list
+	// and set to true if enable or false if disabled.
+	Metrics map[string]bool
+	// Tags is a list of service level tags that are attached to every metric reported for the service
+	// Example: Gateway = "Gateway123"
+	Tags map[string]string
+}
+
+// GetEnabledMetricName returns the matching configured Metric name and if it is enabled.
+func (t *TelemetryInfo) GetEnabledMetricName(metricName string) (string, bool) {
+	for configMetricName, enabled := range t.Metrics {
+		// Match on config metric name as prefix of passed in metric name (service's metric item name)
+		// This allows for a class of Metrics to be enabled with one configured metric name.
+		// App SDK uses this for PipelineMetrics by appending the pipeline ID to the name
+		// of the metric(s) it is collecting for multiple function pipelines.
+		if !strings.HasPrefix(metricName, configMetricName) {
+			continue
+		}
+
+		return configMetricName, enabled
+	}
+
+	// Service's metric name did not match any config Metric name.
+	return "", false
 }
