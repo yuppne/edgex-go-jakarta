@@ -40,7 +40,7 @@ MICROSERVICES= \
 .PHONY: $(MICROSERVICES)
 
 VERSION=$(shell cat ./VERSION 2>/dev/null || echo 0.0.0)
-DOCKER_TAG=$(VERSION)-dev
+DOCKER_TAG=$(VERSION)-yb-0620
 
 GOFLAGS=-ldflags "-X github.com/edgexfoundry/edgex-go.Version=$(VERSION)"
 GOTESTFLAGS?=-race
@@ -55,10 +55,10 @@ tidy:
 	go mod tidy
 
 cmd/core-metadata/core-metadata:
-	$(GO) build $(GOFLAGS) -o $@ ./cmd/core-metadata
+	$(GOCGO) build $(GOFLAGS) -o $@ ./cmd/core-metadata
 
 cmd/core-data/core-data:
-	$(GOCGO) build $(GOFLAGS) -o $@ ./cmd/core-data
+	$(GO) build $(GOFLAGS) -o $@ ./cmd/core-data
 
 cmd/core-command/core-command:
 	$(GO) build $(GOFLAGS) -o $@ ./cmd/core-command

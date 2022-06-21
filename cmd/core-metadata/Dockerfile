@@ -13,23 +13,70 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-# 
+#
 #  ----------------------------------------------------------------------------------
 
 ARG BUILDER_BASE=golang:1.16-alpine3.14
 FROM ${BUILDER_BASE} AS builder
 
 WORKDIR /edgex-go
-
-# The main mirrors are giving us timeout issues on builds periodically.
-# So we can try these.
+ENV LD_LIBRARY_PATH=/home/usr/lib:/home/user/include
 
 RUN sed -e 's/dl-cdn[.]alpinelinux.org/nl.alpinelinux.org/g' -i~ /etc/apk/repositories
 
-RUN apk add --update --no-cache make git
-
 COPY . .
 RUN [ ! -d "vendor" ] && go mod download all || echo "skipping..."
+
+RUN apk update \
+    && apk --no-cache --update add build-base
+
+
+RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >>/etc/apk/repositories
+RUN apk add --update --no-cache linux-headers git cmake bash #wget mercurial g++ autoconf libgflags-dev cmake
+RUN apk add --update --no-cache zlib zlib-dev bzip2 bzip2-dev snappy snappy-dev lz4 lz4-dev zstd@testing zstd-dev libtbb-dev@testing libtbb@testing
+RUN apk add --update --no-cache libbz2 libressl-dev
+
+# install latest gflags
+RUN cd /tmp && \
+    git clone https://github.com/gflags/gflags.git && \
+    cd gflags && \
+    mkdir build && \
+    cd build && \
+    cmake -DBUILD_SHARED_LIBS=1 -DGFLAGS_INSTALL_SHARED_LIBS=1 .. && \
+    make install && \
+    cd /tmp && \
+    rm -R /tmp/gflags/
+
+# Install Rocksdb
+RUN cd /tmp && \
+    git clone https://github.com/facebook/rocksdb.git && \
+    cd rocksdb && \
+    make shared_lib && \
+    mkdir -p /usr/local/rocksdb/lib && \
+    mkdir /usr/local/rocksdb/include && \
+    cp librocksdb.so* /usr/local/rocksdb/lib && \
+    cp /usr/local/rocksdb/lib/librocksdb.so* /usr/lib/ && \
+    cp -r include /usr/local/rocksdb/ && \
+    cp -r include/* /usr/include/
+
+
+#install grocksdb
+RUN cd /tmp && \
+    git clone https://github.com/linxGnu/grocksdb.git && \
+    export CGO_CFLAGS="-I/tmp/rocksdb/include" && \
+    export CGO_LDFLAGS="-L/tmp/rocksdb/ -lrocksdb -lstdc++ -lm -lz -lsnappy -llz4 -lzstd" && \
+    cd grocksdb && \
+    go build && \
+    make && \
+    mkdir -p /usr/local/grocksdb/lib && \
+    mkdir /usr/local/grocksdb/include && \
+    cd dist/linux_amd64 && \
+    cp -r lib /usr/local/grocksdb/ && \
+    cp /usr/local/grocksdb/lib/* /usr/lib/ && \
+    cp -r include /usr/local/grocksdb/ && \
+    cp -r include/* /usr/include
+#    rm -R /tmp/grocksdb && \
+#    rm -R /tmp/rocksdb/
 
 RUN make cmd/core-metadata/core-metadata
 
@@ -37,6 +84,11 @@ RUN make cmd/core-metadata/core-metadata
 FROM alpine:3.14
 
 RUN apk add --update --no-cache dumb-init
+
+RUN apk update
+RUN apk add linux-headers git cmake bash gflags libtbb
+RUN apk add zlib zlib-dev bzip2 bzip2-dev snappy snappy-dev lz4 lz4-dev
+RUN apk add libbz2 libressl-dev
 
 LABEL license='SPDX-License-Identifier: Apache-2.0' \
       copyright='Copyright (c) 2018: Dell, Cavium, Copyright (c) 2021: Intel Corporation'
@@ -49,6 +101,13 @@ WORKDIR /
 COPY --from=builder /edgex-go/Attribution.txt /
 COPY --from=builder /edgex-go/cmd/core-metadata/core-metadata /
 COPY --from=builder /edgex-go/cmd/core-metadata/res/configuration.toml /res/configuration.toml
+COPY --from=builder /tmp/rocksdb/. /rocksdb
+COPY --from=builder /tmp/grocksdb/. /grocksdb
+COPY --from=builder /tmp/rocksdb/librocksdb.so* /usr/lib/
+COPY --from=builder /tmp/rocksdb/include/. /usr/include/
+COPY --from=builder /tmp/grocksdb/dist/linux_amd64/lib/. /usr/lib/
+COPY --from=builder /tmp/grocksdb/dist/linux_amd64/include/. /usr/include/
+
 
 ENTRYPOINT ["/core-metadata"]
 CMD ["-cp=consul.http://edgex-core-consul:8500", "--registry", "--confdir=/res"]

@@ -15,13 +15,30 @@ package main
 
 import (
 	"context"
-
+	"fmt"
 	"github.com/edgexfoundry/edgex-go/internal/core/metadata"
+	"github.com/edgexfoundry/edgex-go/internal/core/metadata/application"
+	"log"
 
 	"github.com/gorilla/mux"
 )
 
 func main() {
+	// **************************** MY CODE ***************************
+	value, err2 := application.ExampleConnectRocksDB()
+	str1 := "@@@ device profile @@@\n"
+	value2 := str1 + value
+	log.Println(value)
+	fmt.Println("**********************************************************\n")
+	fmt.Println(value2)
+	fmt.Println("**********************************************************\n")
+	if err2 != nil {
+		fmt.Println("sendAddDeviceProfileCmd error")
+	}
+
+	//log.Println(value2)
+	// *************************** MY CODE ****************************
+
 	ctx, cancel := context.WithCancel(context.Background())
 	metadata.Main(ctx, cancel, mux.NewRouter())
 }
