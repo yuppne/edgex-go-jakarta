@@ -40,7 +40,7 @@ MICROSERVICES= \
 .PHONY: $(MICROSERVICES)
 
 VERSION=$(shell cat ./VERSION 2>/dev/null || echo 0.0.0)
-DOCKER_TAG=$(VERSION)-yb-0620
+DOCKER_TAG=$(VERSION)-yb-0623-2
 
 GOFLAGS=-ldflags "-X github.com/edgexfoundry/edgex-go.Version=$(VERSION)"
 GOTESTFLAGS?=-race

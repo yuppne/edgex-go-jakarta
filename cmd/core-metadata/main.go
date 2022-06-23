@@ -26,18 +26,16 @@ import (
 func main() {
 	// **************************** MY CODE ***************************
 	value, err2 := application.ExampleConnectRocksDB()
-	str1 := "@@@ device profile @@@\n"
+	if err2 != nil {
+		fmt.Println("Connrocks Code Error:")
+		fmt.Println(err2)
+	}
+	str1 := "@@@ Core-Metadata @@@\n"
 	value2 := str1 + value
 	log.Println(value)
 	fmt.Println("**********************************************************\n")
 	fmt.Println(value2)
 	fmt.Println("**********************************************************\n")
-	if err2 != nil {
-		fmt.Println("sendAddDeviceProfileCmd error")
-	}
-
-	//log.Println(value2)
-	// *************************** MY CODE ****************************
 
 	ctx, cancel := context.WithCancel(context.Background())
 	metadata.Main(ctx, cancel, mux.NewRouter())

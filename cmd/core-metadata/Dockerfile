@@ -94,15 +94,18 @@ LABEL license='SPDX-License-Identifier: Apache-2.0' \
       copyright='Copyright (c) 2018: Dell, Cavium, Copyright (c) 2021: Intel Corporation'
 
 ENV APP_PORT=59881
+ENV EDGEX_SECURITY_SECRET_STORE=false
 #expose meta data port
 EXPOSE $APP_PORT
+
+RUN mkdir "test"
 
 WORKDIR /
 COPY --from=builder /edgex-go/Attribution.txt /
 COPY --from=builder /edgex-go/cmd/core-metadata/core-metadata /
 COPY --from=builder /edgex-go/cmd/core-metadata/res/configuration.toml /res/configuration.toml
-COPY --from=builder /tmp/rocksdb/. /rocksdb
-COPY --from=builder /tmp/grocksdb/. /grocksdb
+#COPY --from=builder /tmp/rocksdb/. /rocksdb
+#COPY --from=builder /tmp/grocksdb/. /grocksdb
 COPY --from=builder /tmp/rocksdb/librocksdb.so* /usr/lib/
 COPY --from=builder /tmp/rocksdb/include/. /usr/include/
 COPY --from=builder /tmp/grocksdb/dist/linux_amd64/lib/. /usr/lib/
@@ -110,4 +113,4 @@ COPY --from=builder /tmp/grocksdb/dist/linux_amd64/include/. /usr/include/
 
 
 ENTRYPOINT ["/core-metadata"]
-CMD ["-cp=consul.http://edgex-core-consul:8500", "--registry", "--confdir=/res"]
+#CMD ["-cp=consul.http://edgex-core-consul:8500", "--registry", "--confdir=/res"]
