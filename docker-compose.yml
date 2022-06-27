@@ -28,35 +28,35 @@ networks:
   edgex-network:
     driver: bridge
 services:
-  app-service-rules:
-    container_name: edgex-app-rules-engine
-    depends_on:
-    - consul
-    - data
-    environment:
-      CLIENTS_CORE_COMMAND_HOST: edgex-core-command
-      CLIENTS_CORE_DATA_HOST: edgex-core-data
-      CLIENTS_CORE_METADATA_HOST: edgex-core-metadata
-      CLIENTS_SUPPORT_NOTIFICATIONS_HOST: edgex-support-notifications
-      CLIENTS_SUPPORT_SCHEDULER_HOST: edgex-support-scheduler
-      DATABASES_PRIMARY_HOST: edgex-redis
-      EDGEX_PROFILE: rules-engine
-      EDGEX_SECURITY_SECRET_STORE: "false"
-      REGISTRY_HOST: edgex-core-consul
-      SERVICE_HOST: edgex-app-rules-engine
-      TRIGGER_EDGEXMESSAGEBUS_PUBLISHHOST_HOST: edgex-redis
-      TRIGGER_EDGEXMESSAGEBUS_SUBSCRIBEHOST_HOST: edgex-redis
-    hostname: edgex-app-rules-engine
-    image: edgexfoundry/app-service-configurable:2.1.0
-    networks:
-      edgex-network: {}
-    ports:
-    - 127.0.0.1:59701:59701/tcp
-    read_only: true
-    restart: always
-    security_opt:
-    - no-new-privileges:true
-    user: 2002:2001
+#  app-service-rules:
+#    container_name: edgex-app-rules-engine
+#    depends_on:
+#    - consul
+#    - data
+#    environment:
+#      CLIENTS_CORE_COMMAND_HOST: edgex-core-command
+#      CLIENTS_CORE_DATA_HOST: edgex-core-data
+#      CLIENTS_CORE_METADATA_HOST: edgex-core-metadata
+#      CLIENTS_SUPPORT_NOTIFICATIONS_HOST: edgex-support-notifications
+#      CLIENTS_SUPPORT_SCHEDULER_HOST: edgex-support-scheduler
+#      DATABASES_PRIMARY_HOST: edgex-redis
+#      EDGEX_PROFILE: rules-engine
+#      EDGEX_SECURITY_SECRET_STORE: "false"
+#      REGISTRY_HOST: edgex-core-consul
+#      SERVICE_HOST: edgex-app-rules-engine
+#      TRIGGER_EDGEXMESSAGEBUS_PUBLISHHOST_HOST: edgex-redis
+#      TRIGGER_EDGEXMESSAGEBUS_SUBSCRIBEHOST_HOST: edgex-redis
+#    hostname: edgex-app-rules-engine
+#    image: edgexfoundry/app-service-configurable:2.1.0
+#    networks:
+#      edgex-network: {}
+#    ports:
+#    - 127.0.0.1:59701:59701/tcp
+#    read_only: true
+#    restart: always
+#    security_opt:
+#    - no-new-privileges:true
+#    user: 2002:2001
 #  app-service-sample:
 #    container_name: edgex-app-sample
 #    depends_on:
@@ -213,34 +213,34 @@ services:
     security_opt:
     - no-new-privileges:true
     user: 2002:2001
-  device-virtual:
-    container_name: edgex-device-virtual
-    depends_on:
-    - consul
-    - data
-    - metadata
-    environment:
-      CLIENTS_CORE_COMMAND_HOST: edgex-core-command
-      CLIENTS_CORE_DATA_HOST: edgex-core-data
-      CLIENTS_CORE_METADATA_HOST: edgex-core-metadata
-      CLIENTS_SUPPORT_NOTIFICATIONS_HOST: edgex-support-notifications
-      CLIENTS_SUPPORT_SCHEDULER_HOST: edgex-support-scheduler
-      DATABASES_PRIMARY_HOST: edgex-redis
-      EDGEX_SECURITY_SECRET_STORE: "false"
-      MESSAGEQUEUE_HOST: edgex-redis
-      REGISTRY_HOST: edgex-core-consul
-      SERVICE_HOST: edgex-device-virtual
-    hostname: edgex-device-virtual
-    image: edgexfoundry/device-virtual:2.1.0
-    networks:
-      edgex-network: {}
-    ports:
-    - 127.0.0.1:59900:59900/tcp
-    read_only: true
-    restart: always
-    security_opt:
-    - no-new-privileges:true
-    user: 2002:2001
+#  device-virtual:
+#    container_name: edgex-device-virtual
+#    depends_on:
+#    - consul
+#    - data
+#    - metadata
+#    environment:
+#      CLIENTS_CORE_COMMAND_HOST: edgex-core-command
+#      CLIENTS_CORE_DATA_HOST: edgex-core-data
+#      CLIENTS_CORE_METADATA_HOST: edgex-core-metadata
+#      CLIENTS_SUPPORT_NOTIFICATIONS_HOST: edgex-support-notifications
+#      CLIENTS_SUPPORT_SCHEDULER_HOST: edgex-support-scheduler
+#      DATABASES_PRIMARY_HOST: edgex-redis
+#      EDGEX_SECURITY_SECRET_STORE: "false"
+#      MESSAGEQUEUE_HOST: edgex-redis
+#      REGISTRY_HOST: edgex-core-consul
+#      SERVICE_HOST: edgex-device-virtual
+#    hostname: edgex-device-virtual
+#    image: edgexfoundry/device-virtual:2.1.0
+#    networks:
+#      edgex-network: {}
+#    ports:
+#    - 127.0.0.1:59900:59900/tcp
+#    read_only: true
+#    restart: always
+#    security_opt:
+#    - no-new-privileges:true
+#    user: 2002:2001
   metadata:
     container_name: edgex-core-metadata
     privileged: true

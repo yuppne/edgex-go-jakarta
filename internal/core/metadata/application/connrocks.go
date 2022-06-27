@@ -32,7 +32,7 @@ func ExampleConnectRocksDB() (string, error) {
 
 	fmt.Println("Before PUT data: ")
 	errString2 := "I am not happy with PUT data"
-	err = db.Put(wo, []byte("yubin"), []byte("0620"))
+	err = db.Put(wo, []byte("yubin"), []byte("0624"))
 	if err != nil {
 		log.Println(err, errString2)
 		return errString2, err

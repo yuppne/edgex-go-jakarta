@@ -8,6 +8,7 @@ package redis
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 
 	pkgCommon "github.com/edgexfoundry/edgex-go/internal/pkg/common"
 
@@ -16,6 +17,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 
 	"github.com/gomodule/redigo/redis"
+	"github.com/linxGnu/grocksdb"
 )
 
 const (
@@ -56,6 +58,48 @@ func sendAddDeviceProfileCmd(conn redis.Conn, storedKey string, dp models.Device
 		return errors.NewCommonEdgeX(errors.KindContractInvalid, "unable to JSON marshal device profile for Redis persistence", err)
 	}
 	_ = conn.Send(SET, storedKey, m)
+
+	// ---------------------------------------------------------------------------------------
+
+	bbto := grocksdb.NewDefaultBlockBasedTableOptions()
+	bbto.SetBlockCache(grocksdb.NewLRUCache(3 << 30))
+
+	opts := grocksdb.NewDefaultOptions()
+	opts.SetBlockBasedTableFactory(bbto)
+	opts.SetCreateIfMissing(true)
+
+	db, err := grocksdb.OpenDb(opts, "/")
+	errString := "I am not happy to open deviceprofile DB"
+	if err != nil {
+		log.Println(errString)
+		log.Println(err)
+		return nil
+	}
+	defer db.Close()
+
+	wo := grocksdb.NewDefaultWriteOptions()
+	err = db.Put(wo, []byte(storedKey), m)
+	errString2 := "I am not happy with PUT deviceprofile"
+	if err != nil {
+		log.Println(err, errString2)
+		return nil
+	}
+
+	ro := grocksdb.NewDefaultReadOptions()
+	value, err := db.Get(ro, []byte(storedKey))
+	errString3 := "I am not happy with GET deviceprofile"
+	if err != nil {
+		log.Println(err, errString3)
+		return nil
+	}
+	defer value.Free()
+
+	fmt.Println("After GET deviceprofile(string(value.Data()): ", string(value.Data()))
+	fmt.Println("After GET deviceprofile(m): ", m)
+	fmt.Println("After GET deviceprofile(dp.Name): ", dp.Name)
+
+	// ---------------------------------------------------------------------------------------
+
 	_ = conn.Send(ZADD, DeviceProfileCollection, 0, storedKey)
 	_ = conn.Send(HSET, DeviceProfileCollectionName, dp.Name, storedKey)
 	_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionManufacturer, dp.Manufacturer), dp.Modified, storedKey)
