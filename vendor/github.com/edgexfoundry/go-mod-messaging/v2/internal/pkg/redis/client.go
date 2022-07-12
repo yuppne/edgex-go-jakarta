@@ -19,6 +19,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"strings"
+	"sync"
 
 	"github.com/edgexfoundry/go-mod-messaging/v2/internal/pkg"
 	"github.com/edgexfoundry/go-mod-messaging/v2/pkg/types"
@@ -32,10 +33,14 @@ const (
 )
 
 // Client MessageClient implementation which provides functionality for sending and receiving messages using
-// RedisStreams.
+// Redis Pub/Sub.
 type Client struct {
 	// Client used for functionality related to reading messages
 	subscribeClient RedisClient
+
+	// Used to avoid multiple subscriptions to the same topic
+	existingTopics map[string]bool
+	mapMutex       *sync.Mutex
 
 	// Client used for functionality related to sending messages
 	publishClient RedisClient
@@ -101,6 +106,8 @@ func NewClientWithCreator(
 
 	return Client{
 		subscribeClient: subscribeClient,
+		existingTopics:  make(map[string]bool),
+		mapMutex:        new(sync.Mutex),
 		publishClient:   publishClient,
 	}, nil
 }
@@ -111,7 +118,7 @@ func (c Client) Connect() error {
 	return nil
 }
 
-// Publish sends the provided message to appropriate Redis stream.
+// Publish sends the provided message to appropriate Redis Pub/Sub.
 func (c Client) Publish(message types.MessageEnvelope, topic string) error {
 	if c.publishClient == nil {
 		return pkg.NewMissingConfigurationErr("PublishHostInfo", "Unable to create a connection for publishing")
@@ -126,18 +133,23 @@ func (c Client) Publish(message types.MessageEnvelope, topic string) error {
 	return c.publishClient.Send(topic, message)
 }
 
-// Subscribe creates background processes which reads messages from the appropriate Redis stream and sends to the
+// Subscribe creates background processes which reads messages from the appropriate Redis Pub/Sub and sends to the
 // provided channels
 func (c Client) Subscribe(topics []types.TopicChannel, messageErrors chan error) error {
 	if c.subscribeClient == nil {
 		return pkg.NewMissingConfigurationErr("SubscribeHostInfo", "Unable to create a connection for subscribing")
 	}
 
-	for _, topic := range topics {
-		topicName := convertToRedisTopicScheme(topic.Topic)
-		messageChannel := topic.Messages
+	err := c.validateTopics(topics)
+	if err != nil {
+		return err
+	}
 
-		go func() {
+	for i := range topics {
+
+		go func(topic types.TopicChannel) {
+			topicName := convertToRedisTopicScheme(topic.Topic)
+			messageChannel := topic.Messages
 			for {
 				message, err := c.subscribeClient.Receive(topicName)
 				if err != nil {
@@ -149,7 +161,7 @@ func (c Client) Subscribe(topics []types.TopicChannel, messageErrors chan error)
 
 				messageChannel <- *message
 			}
-		}()
+		}(topics[i])
 	}
 
 	return nil
@@ -181,6 +193,23 @@ func (c Client) Disconnect() error {
 	return nil
 }
 
+func (c Client) validateTopics(topics []types.TopicChannel) error {
+	c.mapMutex.Lock()
+	defer c.mapMutex.Unlock()
+
+	// First validate all the topics are unique, i.e. not existing subscription
+	for _, topic := range topics {
+		_, exists := c.existingTopics[topic.Topic]
+		if exists {
+			return fmt.Errorf("subscription for '%s' topic already exists, must be unique", topic.Topic)
+		}
+
+		c.existingTopics[topic.Topic] = true
+	}
+
+	return nil
+}
+
 // createRedisClient helper function for creating RedisClient implementations.
 func createRedisClient(
 	redisServerURL string,
@@ -204,9 +233,9 @@ func createRedisClient(
 }
 
 func convertToRedisTopicScheme(topic string) string {
-	// RedisStreams uses "." for separator and "*" for wild cards.
+	// Redis Pub/Sub uses "." for separator and "*" for wild cards.
 	// Since we have standardized on the MQTT style scheme or "/" & "#" we need to
-	// convert it to the RedisStreams scheme.
+	// convert it to the Redis Pub/Sub scheme.
 	topic = strings.Replace(topic, StandardTopicSeparator, RedisTopicSeparator, -1)
 	topic = strings.Replace(topic, StandardWildcard, RedisWildcard, -1)
 
@@ -214,9 +243,9 @@ func convertToRedisTopicScheme(topic string) string {
 }
 
 func convertFromRedisTopicScheme(topic string) string {
-	// RedisStreams uses "." for separator and "*" for wild cards.
+	// Redis Pub/Sub uses "." for separator and "*" for wild cards.
 	// Since we have standardized on the MQTT style scheme or "/" & "#" we need to
-	// convert it from the RedisStreams scheme.
+	// convert it from the Redis Pub/Sub scheme.
 	topic = strings.Replace(topic, RedisTopicSeparator, StandardTopicSeparator, -1)
 	topic = strings.Replace(topic, RedisWildcard, StandardWildcard, -1)
 

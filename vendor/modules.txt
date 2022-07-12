@@ -44,7 +44,7 @@ github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/requests
 github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/responses
 github.com/edgexfoundry/go-mod-core-contracts/v2/errors
 github.com/edgexfoundry/go-mod-core-contracts/v2/models
-# github.com/edgexfoundry/go-mod-messaging/v2 v2.1.0
+# github.com/edgexfoundry/go-mod-messaging/v2 v2.2.0
 ## explicit
 github.com/edgexfoundry/go-mod-messaging/v2/internal/pkg
 github.com/edgexfoundry/go-mod-messaging/v2/internal/pkg/mqtt
