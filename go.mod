@@ -5,7 +5,7 @@ require (
 	github.com/edgexfoundry/go-mod-bootstrap/v2 v2.1.0
 	github.com/edgexfoundry/go-mod-core-contracts/v2 v2.1.0
 	github.com/edgexfoundry/go-mod-messaging/v2 v2.1.0
-	github.com/edgexfoundry/go-mod-registry/v2 v2.1.0
+	github.com/edgexfoundry/go-mod-registry/v2 v2.2.0
 	github.com/edgexfoundry/go-mod-secrets/v2 v2.1.0
 	github.com/fxamacker/cbor/v2 v2.3.0
 	github.com/golang-jwt/jwt/v4 v4.1.0
