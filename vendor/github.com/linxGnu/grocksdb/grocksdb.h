@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "c.h"
+#include "rocksdb/c.h"
 
 // This API provides convenient C wrapper functions for rocksdb client.
 

@@ -1,6 +1,6 @@
 package grocksdb
 
-// #include "c.h"
+// #include "rocksdb/c.h"
 import "C"
 
 // UniversalCompactionStopStyle describes a algorithm used to make a
