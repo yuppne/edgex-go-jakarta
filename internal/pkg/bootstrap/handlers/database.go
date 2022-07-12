@@ -8,6 +8,7 @@ package handlers
 import (
 	"context"
 	"fmt"
+	"log"
 	"sync"
 	"time"
 
@@ -23,6 +24,8 @@ import (
 	"github.com/edgexfoundry/go-mod-bootstrap/v2/di"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
+
+	"github.com/linxGnu/grocksdb"
 )
 
 // httpServer defines the contract used to determine whether or not the http httpServer is running.
@@ -60,6 +63,23 @@ func (d Database) newDBClient(
 				Password: credentials.Password,
 			},
 			lc)
+		//OPen rocksdb db and close, and make option.
+	case "rocksdb":
+		bbto := grocksdb.NewDefaultBlockBasedTableOptions()
+		bbto.SetBlockCache(grocksdb.NewLRUCache(3 << 30))
+
+		opts := grocksdb.NewDefaultOptions()
+		opts.SetBlockBasedTableFactory(bbto)
+		opts.SetCreateIfMissing(true)
+
+		db, err := grocksdb.OpenDb(opts, "/")
+		errString := "I am not happy to open deviceprofile DB"
+		if err != nil {
+			log.Println(errString)
+			return nil, nil // have to modify here
+		}
+		defer db.Close()
+
 	default:
 		return nil, db.ErrUnsupportedDatabase
 	}

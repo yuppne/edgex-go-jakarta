@@ -21,11 +21,11 @@ import (
 )
 
 const (
-	DeviceProfileCollection             = "md|dp"
-	DeviceProfileCollectionName         = DeviceProfileCollection + DBKeySeparator + common.Name
-	DeviceProfileCollectionLabel        = DeviceProfileCollection + DBKeySeparator + common.Label
-	DeviceProfileCollectionModel        = DeviceProfileCollection + DBKeySeparator + common.Model
-	DeviceProfileCollectionManufacturer = DeviceProfileCollection + DBKeySeparator + common.Manufacturer
+	DeviceProfileCollection             = "md|dp"                                                        // metadata|devcieprofile
+	DeviceProfileCollectionName         = DeviceProfileCollection + DBKeySeparator + common.Name         // metadata|devcieprofile:name
+	DeviceProfileCollectionLabel        = DeviceProfileCollection + DBKeySeparator + common.Label        // metadata|devcieprofile:label
+	DeviceProfileCollectionModel        = DeviceProfileCollection + DBKeySeparator + common.Model        // metadata|devcieprofile:model
+	DeviceProfileCollectionManufacturer = DeviceProfileCollection + DBKeySeparator + common.Manufacturer // metadata|devcieprofile:manufacturer
 )
 
 // deviceProfileStoredKey return the device profile's stored key which combines the collection name and object id
@@ -52,6 +52,7 @@ func deviceProfileIdExists(conn redis.Conn, id string) (bool, errors.EdgeX) {
 }
 
 // sendAddDeviceProfileCmd send redis command for adding device profile
+// 장치 프로필을 추가하기 위한 redis 명령을 보냅니다.
 func sendAddDeviceProfileCmd(conn redis.Conn, storedKey string, dp models.DeviceProfile) errors.EdgeX {
 	m, err := json.Marshal(dp)
 	if err != nil {
@@ -85,32 +86,42 @@ func sendAddDeviceProfileCmd(conn redis.Conn, storedKey string, dp models.Device
 		return nil
 	}
 
-	ro := grocksdb.NewDefaultReadOptions()
-	value, err := db.Get(ro, []byte(storedKey))
-	errString3 := "I am not happy with GET deviceprofile"
-	if err != nil {
-		log.Println(err, errString3)
-		return nil
-	}
-	defer value.Free()
-
-	fmt.Println("After GET deviceprofile(string(value.Data()): ", string(value.Data()))
-	fmt.Println("After GET deviceprofile(m): ", m)
-	fmt.Println("After GET deviceprofile(dp.Name): ", dp.Name)
+	//ro := grocksdb.NewDefaultReadOptions()
+	//value, err := db.Get(ro, []byte(storedKey))
+	//errString3 := "I am not happy with GET deviceprofile"
+	//if err != nil {
+	//	log.Println(err, errString3)
+	//	return nil
+	//}
+	//defer value.Free()
+	//
+	//fmt.Println("After GET deviceprofile(string(value.Data()): ", string(value.Data()))
+	//fmt.Println("After GET deviceprofile(m): ", m)
+	//fmt.Println("After GET deviceprofile(dp.Name): ", dp.Name)
 
 	// ---------------------------------------------------------------------------------------
 
-	_ = conn.Send(ZADD, DeviceProfileCollection, 0, storedKey)
-	_ = conn.Send(HSET, DeviceProfileCollectionName, dp.Name, storedKey)
+	_ = conn.Send(ZADD, DeviceProfileCollection, 0, storedKey) // (key, score(int), member)
+
+	_ = conn.Send(HSET, DeviceProfileCollectionName, dp.Name, storedKey) // (key, field, value)
+	err = db.Put(wo, []byte(DeviceProfileCollectionName+DBKeySeparator+dp.Name), []byte(storedKey))
+
 	_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionManufacturer, dp.Manufacturer), dp.Modified, storedKey)
+	err = db.Put(wo, []byte(CreateKey(DeviceProfileCollectionManufacturer, dp.Manufacturer)+DBKeySeparator+string(dp.Modified)), []byte(storedKey))
+
 	_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionModel, dp.Model), dp.Modified, storedKey)
+	err = db.Put(wo, []byte(CreateKey(DeviceProfileCollectionModel, dp.Model)+DBKeySeparator+string(dp.Modified)), []byte(storedKey))
+
 	for _, label := range dp.Labels {
 		_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionLabel, label), dp.Modified, storedKey)
+		err = db.Put(wo, []byte(CreateKey(DeviceProfileCollectionLabel, label)+DBKeySeparator+string(dp.Modified)), []byte(storedKey))
 	}
+
 	return nil
 }
 
 // addDeviceProfile adds a device profile to DB
+// Use sendAddDeviceProfileCmd
 func addDeviceProfile(conn redis.Conn, dp models.DeviceProfile) (models.DeviceProfile, errors.EdgeX) {
 	// query device profile name and id to avoid the conflict
 	exists, edgeXerr := deviceProfileIdExists(conn, dp.Id)
@@ -137,6 +148,7 @@ func addDeviceProfile(conn redis.Conn, dp models.DeviceProfile) (models.DevicePr
 
 	storedKey := deviceProfileStoredKey(dp.Id)
 	_ = conn.Send(MULTI)
+
 	edgeXerr = sendAddDeviceProfileCmd(conn, storedKey, dp)
 	if edgeXerr != nil {
 		return dp, errors.NewCommonEdgeXWrapper(edgeXerr)
