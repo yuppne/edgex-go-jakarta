@@ -1,6 +1,6 @@
 package grocksdb
 
-// #include "c.h"
+// #include "rocksdb/c.h"
 import "C"
 
 // CuckooTableOptions are options for cuckoo table.

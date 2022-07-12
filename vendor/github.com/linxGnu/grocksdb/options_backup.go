@@ -1,6 +1,6 @@
 package grocksdb
 
-// #include "c.h"
+// #include "rocksdb/c.h"
 // #include "grocksdb.h"
 import "C"
 import "unsafe"
