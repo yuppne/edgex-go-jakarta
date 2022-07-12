@@ -3,11 +3,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package redis
+package rocksdb
 
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 
 	pkgCommon "github.com/edgexfoundry/edgex-go/internal/pkg/common"
 
@@ -16,14 +17,15 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 
 	"github.com/gomodule/redigo/redis"
+	"github.com/linxGnu/grocksdb"
 )
 
 const (
-	DeviceProfileCollection             = "md|dp"
-	DeviceProfileCollectionName         = DeviceProfileCollection + DBKeySeparator + common.Name
-	DeviceProfileCollectionLabel        = DeviceProfileCollection + DBKeySeparator + common.Label
-	DeviceProfileCollectionModel        = DeviceProfileCollection + DBKeySeparator + common.Model
-	DeviceProfileCollectionManufacturer = DeviceProfileCollection + DBKeySeparator + common.Manufacturer
+	DeviceProfileCollection             = "md|dp"                                                        // metadata|devcieprofile
+	DeviceProfileCollectionName         = DeviceProfileCollection + DBKeySeparator + common.Name         // metadata|devcieprofile:name
+	DeviceProfileCollectionLabel        = DeviceProfileCollection + DBKeySeparator + common.Label        // metadata|devcieprofile:label
+	DeviceProfileCollectionModel        = DeviceProfileCollection + DBKeySeparator + common.Model        // metadata|devcieprofile:model
+	DeviceProfileCollectionManufacturer = DeviceProfileCollection + DBKeySeparator + common.Manufacturer // metadata|devcieprofile:manufacturer
 )
 
 // deviceProfileStoredKey return the device profile's stored key which combines the collection name and object id
@@ -50,23 +52,76 @@ func deviceProfileIdExists(conn redis.Conn, id string) (bool, errors.EdgeX) {
 }
 
 // sendAddDeviceProfileCmd send redis command for adding device profile
+// 장치 프로필을 추가하기 위한 redis 명령을 보냅니다.
 func sendAddDeviceProfileCmd(conn redis.Conn, storedKey string, dp models.DeviceProfile) errors.EdgeX {
 	m, err := json.Marshal(dp)
 	if err != nil {
 		return errors.NewCommonEdgeX(errors.KindContractInvalid, "unable to JSON marshal device profile for Redis persistence", err)
 	}
 	_ = conn.Send(SET, storedKey, m)
-	_ = conn.Send(ZADD, DeviceProfileCollection, 0, storedKey)
-	_ = conn.Send(HSET, DeviceProfileCollectionName, dp.Name, storedKey)
+
+	// ---------------------------------------------------------------------------------------
+
+	bbto := grocksdb.NewDefaultBlockBasedTableOptions()
+	bbto.SetBlockCache(grocksdb.NewLRUCache(3 << 30))
+
+	opts := grocksdb.NewDefaultOptions()
+	opts.SetBlockBasedTableFactory(bbto)
+	opts.SetCreateIfMissing(true)
+
+	db, err := grocksdb.OpenDb(opts, "/")
+	errString := "I am not happy to open deviceprofile DB"
+	if err != nil {
+		log.Println(errString)
+		log.Println(err)
+		return nil
+	}
+	defer db.Close()
+
+	wo := grocksdb.NewDefaultWriteOptions()
+	err = db.Put(wo, []byte(storedKey), m)
+	errString2 := "I am not happy with PUT deviceprofile"
+	if err != nil {
+		log.Println(err, errString2)
+		return nil
+	}
+
+	//ro := grocksdb.NewDefaultReadOptions()
+	//value, err := db.Get(ro, []byte(storedKey))
+	//errString3 := "I am not happy with GET deviceprofile"
+	//if err != nil {
+	//	log.Println(err, errString3)
+	//	return nil
+	//}
+	//defer value.Free()
+	//
+	//fmt.Println("After GET deviceprofile(string(value.Data()): ", string(value.Data()))
+	//fmt.Println("After GET deviceprofile(m): ", m)
+	//fmt.Println("After GET deviceprofile(dp.Name): ", dp.Name)
+
+	// ---------------------------------------------------------------------------------------
+
+	_ = conn.Send(ZADD, DeviceProfileCollection, 0, storedKey) // (key, score(int), member)
+
+	_ = conn.Send(HSET, DeviceProfileCollectionName, dp.Name, storedKey) // (key, field, value)
+	err = db.Put(wo, []byte(DeviceProfileCollectionName+DBKeySeparator+dp.Name), []byte(storedKey))
+
 	_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionManufacturer, dp.Manufacturer), dp.Modified, storedKey)
+	err = db.Put(wo, []byte(CreateKey(DeviceProfileCollectionManufacturer, dp.Manufacturer)+DBKeySeparator+string(dp.Modified)), []byte(storedKey))
+
 	_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionModel, dp.Model), dp.Modified, storedKey)
+	err = db.Put(wo, []byte(CreateKey(DeviceProfileCollectionModel, dp.Model)+DBKeySeparator+string(dp.Modified)), []byte(storedKey))
+
 	for _, label := range dp.Labels {
 		_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionLabel, label), dp.Modified, storedKey)
+		err = db.Put(wo, []byte(CreateKey(DeviceProfileCollectionLabel, label)+DBKeySeparator+string(dp.Modified)), []byte(storedKey))
 	}
+
 	return nil
 }
 
 // addDeviceProfile adds a device profile to DB
+// Use sendAddDeviceProfileCmd
 func addDeviceProfile(conn redis.Conn, dp models.DeviceProfile) (models.DeviceProfile, errors.EdgeX) {
 	// query device profile name and id to avoid the conflict
 	exists, edgeXerr := deviceProfileIdExists(conn, dp.Id)
@@ -92,7 +147,8 @@ func addDeviceProfile(conn redis.Conn, dp models.DeviceProfile) (models.DevicePr
 	dp.Modified = ts
 
 	storedKey := deviceProfileStoredKey(dp.Id)
-	_ = conn.Send(MULTI)
+	_ = conn.Send(MULTI) // 이건 atomic하게 락잡아주는거 같은거임 MULTI/EXEC
+
 	edgeXerr = sendAddDeviceProfileCmd(conn, storedKey, dp)
 	if edgeXerr != nil {
 		return dp, errors.NewCommonEdgeXWrapper(edgeXerr)
@@ -109,7 +165,7 @@ func addDeviceProfile(conn redis.Conn, dp models.DeviceProfile) (models.DevicePr
 func deviceProfileById(conn redis.Conn, id string) (deviceProfile models.DeviceProfile, edgeXerr errors.EdgeX) {
 	edgeXerr = getObjectById(conn, deviceProfileStoredKey(id), &deviceProfile)
 	if edgeXerr != nil {
-		return deviceProfile, errors.NewCommonEdgeX(errors.Kind(edgeXerr), fmt.Sprintf("fail to query device profile by id %s", id), edgeXerr)
+		return deviceProfile, errors.NewCommonEdgeXWrapper(edgeXerr)
 	}
 	return
 }
@@ -118,7 +174,7 @@ func deviceProfileById(conn redis.Conn, id string) (deviceProfile models.DeviceP
 func deviceProfileByName(conn redis.Conn, name string) (deviceProfile models.DeviceProfile, edgeXerr errors.EdgeX) {
 	edgeXerr = getObjectByHash(conn, DeviceProfileCollectionName, name, &deviceProfile)
 	if edgeXerr != nil {
-		return deviceProfile, errors.NewCommonEdgeX(errors.Kind(edgeXerr), fmt.Sprintf("fail to query device profile by name %s", name), edgeXerr)
+		return deviceProfile, errors.NewCommonEdgeXWrapper(edgeXerr)
 	}
 	return
 }
