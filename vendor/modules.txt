@@ -133,7 +133,7 @@ github.com/leodido/go-urn
 github.com/lib/pq
 github.com/lib/pq/oid
 github.com/lib/pq/scram
-# github.com/linxGnu/grocksdb v1.7.1
+# github.com/linxGnu/grocksdb v1.7.4
 ## explicit
 github.com/linxGnu/grocksdb
 # github.com/mattn/go-colorable v0.1.6
@@ -185,6 +185,6 @@ golang.org/x/text/language
 # gopkg.in/eapache/queue.v1 v1.1.0
 ## explicit
 gopkg.in/eapache/queue.v1
-# gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
+# gopkg.in/yaml.v3 v3.0.1
 ## explicit
 gopkg.in/yaml.v3
