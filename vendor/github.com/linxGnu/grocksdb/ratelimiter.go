@@ -1,7 +1,7 @@
 package grocksdb
 
 // #include <stdlib.h>
-// #include "c.h"
+// #include "rocksdb/c.h"
 import "C"
 
 // RateLimiter is used to control write rate of flush and

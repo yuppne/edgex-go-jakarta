@@ -1,7 +1,7 @@
 package grocksdb
 
 // #include <stdlib.h>
-// #include "c.h"
+// #include "rocksdb/c.h"
 import "C"
 
 // MemoryUsage contains memory usage statistics provided by RocksDB

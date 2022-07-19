@@ -1,7 +1,7 @@
 package grocksdb
 
 // #include <stdlib.h>
-// #include "c.h"
+// #include "rocksdb/c.h"
 import "C"
 
 // RestoreOptions captures the options to be used during

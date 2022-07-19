@@ -1,6 +1,6 @@
 package grocksdb
 
-// #include "c.h"
+// #include "rocksdb/c.h"
 import "C"
 
 // PerfLevel indicates how much perf stats to collect. Affects perf_context and iostats_context.
