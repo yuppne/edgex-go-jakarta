@@ -55,14 +55,14 @@ func Main(ctx context.Context, cancel context.CancelFunc, router *mux.Router) {
 		},
 	})
 
-	httpServer := handlers.NewHttpServer(router, true)
+	httpServer := handlers.NewHttpServer(router, true) // for database
 
 	bootstrap.Run(
 		ctx,
 		cancel,
 		f,
-		common.CoreMetaDataServiceKey,
-		internal.ConfigStemCore,
+		common.CoreMetaDataServiceKey, // "core-metadata"
+		internal.ConfigStemCore,       // "edgex/core/"
 		configuration,
 		startupTimer,
 		dic,

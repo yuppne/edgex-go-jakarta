@@ -8,8 +8,11 @@ package rocksdb
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/linxGnu/grocksdb"
 	"strconv"
 	"strings"
+
+	err "errors"
 
 	pkgCommon "github.com/edgexfoundry/edgex-go/internal/pkg/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
@@ -19,15 +22,39 @@ import (
 	"github.com/google/uuid"
 )
 
-func getObjectById(conn redis.Conn, id string, out interface{}) errors.EdgeX {
-	obj, err := redis.Bytes(conn.Do(GET, id))
+var ro = grocksdb.NewDefaultReadOptions()
+
+var ErrNil = err.New("redigo: nil returned")
+
+type Error string
+
+func Bool(reply interface{}, err error) (bool, error) {
+	if err != nil {
+		return false, err
+	}
+	switch reply := reply.(type) {
+	case int64:
+		return reply != 0, nil
+	case []byte:
+		return strconv.ParseBool(string(reply))
+	case nil:
+		return false, ErrNil
+	}
+	return false, fmt.Errorf("rocksdb: unexpected type for Bool, got type %T", reply)
+}
+
+// ****************************************************
+
+func getObjectById(conn *grocksdb.DB, id string, out interface{}) errors.EdgeX {
+	//obj, err := redis.Bytes(conn.Do(GET, id))
+	obj, err := conn.Get(ro, []byte(id))
 	if err == redis.ErrNil {
 		return errors.NewCommonEdgeX(errors.KindEntityDoesNotExist, fmt.Sprintf("fail to query object %T, because id: %s doesn't exist in the database", out, id), err)
 	} else if err != nil {
 		return errors.NewCommonEdgeX(errors.KindDatabaseError, fmt.Sprintf("query object %T by id from the database failed", out), err)
 	}
 
-	err = json.Unmarshal(obj, out)
+	err = json.Unmarshal(obj.Data(), out)
 	if err != nil {
 		return errors.NewCommonEdgeX(errors.KindDatabaseError, fmt.Sprintf("object %T format parsing failed from the database", out), err)
 	}
@@ -36,7 +63,7 @@ func getObjectById(conn redis.Conn, id string, out interface{}) errors.EdgeX {
 }
 
 // getObjectByHash retrieves the id with associated field from the hash stored and then retrieves the object by id
-func getObjectByHash(conn redis.Conn, hash string, field string, out interface{}) errors.EdgeX {
+func getObjectByHash(conn *grocksdb.DB, hash string, field string, out interface{}) errors.EdgeX {
 	id, err := redis.String(conn.Do(HGET, hash, field))
 	if err == redis.ErrNil {
 		return errors.NewCommonEdgeX(errors.KindEntityDoesNotExist, fmt.Sprintf("fail to query object %T, because %s: %s doesn't exist in the database", out, field, hash), err)
@@ -49,19 +76,19 @@ func getObjectByHash(conn redis.Conn, hash string, field string, out interface{}
 
 // getObjectsByRange retrieves the entries for keys enumerated in a sorted set.
 // The entries are retrieved in the sorted set order.
-func getObjectsByRange(conn redis.Conn, key string, start, end int) ([][]byte, errors.EdgeX) {
+func getObjectsByRange(conn *grocksdb.DB, key string, start, end int) ([][]byte, errors.EdgeX) {
 	return getObjectsBySomeRange(conn, ZRANGE, key, start, end)
 }
 
 // getObjectsByRevRange retrieves the entries for keys enumerated in a sorted set.
 // The entries are retrieved in the reverse sorted set order.
-func getObjectsByRevRange(conn redis.Conn, key string, offset int, limit int) ([][]byte, errors.EdgeX) {
+func getObjectsByRevRange(conn *grocksdb.DB, key string, offset int, limit int) ([][]byte, errors.EdgeX) {
 	return getObjectsBySomeRange(conn, ZREVRANGE, key, offset, limit)
 }
 
 // getObjectsBySomeRange retrieves the entries for keys enumerated in a sorted set using the specified Redis range
 // command (i.e. RANGE, REVRANGE). The entries are retrieved in the order specified by the supplied Redis command.
-func getObjectsBySomeRange(conn redis.Conn, command string, key string, offset int, limit int) ([][]byte, errors.EdgeX) {
+func getObjectsBySomeRange(conn *grocksdb.DB, command string, key string, offset int, limit int) ([][]byte, errors.EdgeX) {
 	if limit == 0 {
 		return [][]byte{}, nil
 	}
@@ -87,7 +114,7 @@ func getObjectsBySomeRange(conn redis.Conn, command string, key string, offset i
 }
 
 // getObjectsByScoreRange query objects by specified key's score range, offset, and limit.  Note that the specified key must be a sorted set.
-func getObjectsByScoreRange(conn redis.Conn, key string, start int, end int, offset int, limit int) (objects [][]byte, edgeXerr errors.EdgeX) {
+func getObjectsByScoreRange(conn *grocksdb.DB, key string, start int, end int, offset int, limit int) (objects [][]byte, edgeXerr errors.EdgeX) {
 	if limit == 0 {
 		return
 	}
@@ -108,7 +135,7 @@ func getObjectsByScoreRange(conn redis.Conn, key string, start int, end int, off
 
 // getObjectsByLabelsAndSomeRange retrieves the entries for keys enumerated in a sorted set using the specified Redis range
 // command (i.e. RANGE, REVRANGE). The entries are retrieved in the order specified by the supplied Redis command.
-func getObjectsByLabelsAndSomeRange(conn redis.Conn, command string, key string, labels []string, offset int, limit int) ([][]byte, errors.EdgeX) {
+func getObjectsByLabelsAndSomeRange(conn *grocksdb.DB, command string, key string, labels []string, offset int, limit int) ([][]byte, errors.EdgeX) {
 	if len(labels) == 0 { //if no labels specified, simply return getObjectsBySomeRange
 		return getObjectsBySomeRange(conn, command, key, offset, limit)
 	}
@@ -144,7 +171,7 @@ func getObjectsByLabelsAndSomeRange(conn redis.Conn, command string, key string,
 }
 
 // getObjectsByIds retrieves the entries with Ids
-func getObjectsByIds(conn redis.Conn, ids []interface{}) ([][]byte, errors.EdgeX) {
+func getObjectsByIds(conn *grocksdb.DB, ids []interface{}) ([][]byte, errors.EdgeX) {
 	var result [][]byte
 	var err error
 	if len(ids) > 0 {
@@ -165,7 +192,7 @@ func getObjectsByIds(conn redis.Conn, ids []interface{}) ([][]byte, errors.EdgeX
 }
 
 // objectNameExists checks whether the object name exists or not in the specified hashKey
-func objectNameExists(conn redis.Conn, hashKey string, name string) (bool, errors.EdgeX) {
+func objectNameExists(conn *grocksdb.DB, hashKey string, name string) (bool, errors.EdgeX) {
 	exists, err := redis.Bool(conn.Do(HEXISTS, hashKey, name))
 	if err != nil {
 		return false, errors.NewCommonEdgeX(errors.KindDatabaseError, "object name existence check failed", err)
@@ -174,15 +201,16 @@ func objectNameExists(conn redis.Conn, hashKey string, name string) (bool, error
 }
 
 // objectIdExists checks whether the object id exists or not
-func objectIdExists(conn redis.Conn, id string) (bool, errors.EdgeX) {
-	exists, err := redis.Bool(conn.Do(EXISTS, id))
+func objectIdExists(conn *grocksdb.DB, id string) (bool, errors.EdgeX) {
+	// exists, err := redis.Bool(conn.Do(EXISTS, id))
+	exists, err := Bool(conn.Get(ro, []byte(id)))
 	if err != nil {
 		return false, errors.NewCommonEdgeX(errors.KindDatabaseError, "object Id existence check failed", err)
 	}
 	return exists, nil
 }
 
-func getMemberCountByScoreRange(conn redis.Conn, key string, start int, end int) (uint32, errors.EdgeX) {
+func getMemberCountByScoreRange(conn *grocksdb.DB, key string, start int, end int) (uint32, errors.EdgeX) {
 	count, err := redis.Int(conn.Do(ZCOUNT, key, start, end))
 	if err != nil {
 		return 0, errors.NewCommonEdgeX(errors.KindDatabaseError, fmt.Sprintf("failed to get member count from %s between score range %v to %v", key, start, end), err)
@@ -192,7 +220,7 @@ func getMemberCountByScoreRange(conn redis.Conn, key string, start int, end int)
 }
 
 // getMemberCountByLabels return the record count of key with labels specified.
-func getMemberCountByLabels(conn redis.Conn, command string, key string, labels []string) (uint32, errors.EdgeX) {
+func getMemberCountByLabels(conn *grocksdb.DB, command string, key string, labels []string) (uint32, errors.EdgeX) {
 	if len(labels) == 0 { //if no labels specified, simply return the count of record for the key
 		return getMemberNumber(conn, ZCARD, key)
 	}
@@ -210,7 +238,7 @@ func getMemberCountByLabels(conn redis.Conn, command string, key string, labels 
 	return uint32(len(commonIds)), nil
 }
 
-func getMemberNumber(conn redis.Conn, command string, key string) (uint32, errors.EdgeX) {
+func getMemberNumber(conn *grocksdb.DB, command string, key string) (uint32, errors.EdgeX) {
 	count, err := redis.Int(conn.Do(command, key))
 	if err != nil {
 		return 0, errors.NewCommonEdgeX(errors.KindDatabaseError, fmt.Sprintf("failed to get member number with command %s from %s", command, key), err)
@@ -220,17 +248,17 @@ func getMemberNumber(conn redis.Conn, command string, key string) (uint32, error
 }
 
 // unionObjectsByValues returns the keys of the set resulting from the union of all the given sets.
-func unionObjectsByKeys(conn redis.Conn, offset int, limit int, redisKeys ...string) ([][]byte, errors.EdgeX) {
+func unionObjectsByKeys(conn *grocksdb.DB, offset int, limit int, redisKeys ...string) ([][]byte, errors.EdgeX) {
 	return objectsByKeys(conn, ZUNIONSTORE, offset, limit, redisKeys...)
 }
 
 // intersectionObjectsByKeys returns the keys of the set resulting from the intersection of all the given sets.
-func intersectionObjectsByKeys(conn redis.Conn, offset int, limit int, redisKeys ...string) ([][]byte, errors.EdgeX) {
+func intersectionObjectsByKeys(conn *grocksdb.DB, offset int, limit int, redisKeys ...string) ([][]byte, errors.EdgeX) {
 	return objectsByKeys(conn, ZINTERSTORE, offset, limit, redisKeys...)
 }
 
 // objectsByKeys returns the keys of the set resulting from the all the given sets. The data set method could be ZINTERSTORE or ZUNIONSTORE
-func objectsByKeys(conn redis.Conn, setMethod string, offset int, limit int, redisKeys ...string) ([][]byte, errors.EdgeX) {
+func objectsByKeys(conn *grocksdb.DB, setMethod string, offset int, limit int, redisKeys ...string) ([][]byte, errors.EdgeX) {
 	if limit == 0 {
 		return [][]byte{}, nil
 	}
@@ -278,12 +306,12 @@ func objectsByKeys(conn redis.Conn, setMethod string, offset int, limit int, red
 }
 
 // unionObjectsByKeysAndScoreRange returns objects resulting from the union of all the given sets with specified score range, offset, and limit
-func unionObjectsByKeysAndScoreRange(conn redis.Conn, start, end, offset, limit int, redisKeys ...string) ([][]byte, uint32, errors.EdgeX) {
+func unionObjectsByKeysAndScoreRange(conn *grocksdb.DB, start, end, offset, limit int, redisKeys ...string) ([][]byte, uint32, errors.EdgeX) {
 	return objectsByKeysAndScoreRange(conn, ZUNIONSTORE, start, end, offset, limit, redisKeys...)
 }
 
 // objectsByKeysAndScoreRange returns objects resulting from the set method of all the given sets with specified score range, offset, and limit.  The data set method could be either ZINTERSTORE or ZUNIONSTORE
-func objectsByKeysAndScoreRange(conn redis.Conn, setMethod string, start, end, offset, limit int, redisKeys ...string) (objects [][]byte, totalCount uint32, edgeXerr errors.EdgeX) {
+func objectsByKeysAndScoreRange(conn *grocksdb.DB, setMethod string, start, end, offset, limit int, redisKeys ...string) (objects [][]byte, totalCount uint32, edgeXerr errors.EdgeX) {
 	// build up the redis command arguments
 	args := redis.Args{}
 	cacheSet := uuid.New().String()

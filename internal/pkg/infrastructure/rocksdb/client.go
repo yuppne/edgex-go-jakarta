@@ -9,7 +9,7 @@ import (
 	"fmt"
 
 	"github.com/edgexfoundry/edgex-go/internal/pkg/db"
-	redisClient "github.com/edgexfoundry/edgex-go/internal/pkg/db/redis"
+	rocksClient "github.com/edgexfoundry/edgex-go/internal/pkg/db/rocksdb"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	model "github.com/edgexfoundry/go-mod-core-contracts/v2/models"
@@ -17,15 +17,17 @@ import (
 	"github.com/google/uuid"
 )
 
+// src/edgex-go/internal/pkg/infrastructure/rocksdb/client.go
+
 type Client struct {
-	*redisClient.Client
+	*rocksClient.Client
 	loggingClient logger.LoggingClient
 }
 
 func NewClient(config db.Configuration, logger logger.LoggingClient) (*Client, errors.EdgeX) {
 	var err error
 	dc := &Client{}
-	dc.Client, err = redisClient.NewClient(config, logger)
+	dc.Client, err = rocksClient.NewClient(config, logger)
 	dc.loggingClient = logger
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindDatabaseError, "redis client creation failed", err)
@@ -77,9 +79,7 @@ func (c *Client) DeleteEventById(id string) (edgeXerr errors.EdgeX) {
 
 // Add a new device profle
 func (c *Client) AddDeviceProfile(dp model.DeviceProfile) (model.DeviceProfile, errors.EdgeX) {
-	conn := c.Pool.Get()
-	defer conn.Close()
-
+	conn := c.Database
 	if dp.Id != "" {
 		_, err := uuid.Parse(dp.Id)
 		if err != nil {

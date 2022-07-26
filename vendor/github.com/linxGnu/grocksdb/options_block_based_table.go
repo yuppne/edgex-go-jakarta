@@ -148,7 +148,7 @@ func (opts *BlockBasedTableOptions) SetNoBlockCache(value bool) {
 // a block is the unit of reading from disk).
 //
 // If set, use the specified cache for blocks.
-// If nil, rocksdb will auoptsmatically create and use an 8MB internal cache.
+// If nil, rocksdb will automatically create and use an 8MB internal cache.
 // Default: nil
 func (opts *BlockBasedTableOptions) SetBlockCache(cache *Cache) {
 	opts.cache = cache

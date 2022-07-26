@@ -15,27 +15,23 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/edgexfoundry/edgex-go/internal/core/metadata"
-	"github.com/edgexfoundry/edgex-go/internal/core/metadata/application"
-	"log"
-
 	"github.com/gorilla/mux"
 )
 
 func main() {
 	// **************************** MY CODE ***************************
-	value, err2 := application.ExampleConnectRocksDB()
-	if err2 != nil {
-		fmt.Println("Connrocks Code Error:")
-		fmt.Println(err2)
-	}
-	str1 := "@@@ Core-Metadata @@@\n"
-	value2 := str1 + value
-	log.Println(value)
-	fmt.Println("**********************************************************\n")
-	fmt.Println(value2)
-	fmt.Println("**********************************************************\n")
+	//value, err2 := application.ExampleConnectRocksDB()
+	//if err2 != nil {
+	//	fmt.Println("Connrocks Code Error:")
+	//	fmt.Println(err2)
+	//}
+	//str1 := "@@@ Core-Metadata @@@\n"
+	//value2 := str1 + value
+	//log.Println(value)
+	//fmt.Println("**********************************************************\n")
+	//fmt.Println(value2)
+	//fmt.Println("**********************************************************\n")
 
 	ctx, cancel := context.WithCancel(context.Background())
 	metadata.Main(ctx, cancel, mux.NewRouter())
