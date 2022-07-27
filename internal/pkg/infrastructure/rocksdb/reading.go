@@ -274,7 +274,7 @@ func readingsByDeviceNameAndTimeRange(conn redis.Conn, deviceName string, startT
 	return convertObjectsToReadings(objects)
 }
 
-func convertObjectsToReadings(objects [][]byte) (readings []models.Reading, edgeXerr errors.EdgeX) {
+func convertObjectsToReadings(objects []interface{}) (readings []models.Reading, edgeXerr errors.EdgeX) {
 	readings = make([]models.Reading, len(objects))
 	var alias struct {
 		ValueType string

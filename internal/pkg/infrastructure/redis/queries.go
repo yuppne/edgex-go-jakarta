@@ -70,12 +70,13 @@ func getObjectsBySomeRange(conn redis.Conn, command string, key string, offset i
 	if limit == -1 { //-1 limit means that clients want to retrieve all remaining records after offset from DB, so specifying -1 for end
 		end = limit
 	}
-	count, _ := redis.Int(conn.Do(ZCOUNT, key, InfiniteMin, InfiniteMax))
-	if count == 0 { // return nil slice when there is no records in the DB
+	count, _ := redis.Int(conn.Do(ZCOUNT, key, InfiniteMin, InfiniteMax)) // count total
+	if count == 0 {                                                       // return nil slice when there is no records in the DB
 		return nil, nil
 	} else if count > 0 && start > count { // return RangeNotSatisfiable error when start is out of range
 		return nil, errors.NewCommonEdgeX(errors.KindRangeNotSatisfiable, fmt.Sprintf("query objects bounds out of range. length:%v", count), nil)
 	}
+	// if count >= 1, start to find key value. Here is real code to find objs.
 	ids, err := redis.Values(conn.Do(command, key, start, end))
 	if err == redis.ErrNil {
 		return nil, errors.NewCommonEdgeX(errors.KindEntityDoesNotExist, fmt.Sprintf("objects under %s do not exist", key), err)

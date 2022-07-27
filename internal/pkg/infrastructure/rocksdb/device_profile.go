@@ -100,19 +100,20 @@ func sendAddDeviceProfileCmd(conn *grocksdb.DB, storedKey string, dp models.Devi
 	//fmt.Println("After GET deviceprofile(dp.Name): ", dp.Name)
 
 	//_ = conn.Send(ZADD, DeviceProfileCollection, 0, storedKey) // (key, score(int), member)
+	err = conn.Put(wo, []byte(CreateKey(DeviceProfileCollection, string(0))), []byte(storedKey))
 
 	//_ = conn.Send(HSET, DeviceProfileCollectionName, dp.Name, storedKey) // (key, field, value)
 	err = conn.Put(wo, []byte(DeviceProfileCollectionName+DBKeySeparator+dp.Name), []byte(storedKey))
 
 	//_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionManufacturer, dp.Manufacturer), dp.Modified, storedKey)
-	err = conn.Put(wo, []byte(CreateKey(DeviceProfileCollectionManufacturer, dp.Manufacturer)+DBKeySeparator+string(dp.Modified)), []byte(storedKey))
+	err = conn.Put(wo, []byte(CreateKey(DeviceProfileCollectionManufacturer, dp.Manufacturer)+string(dp.Modified)), []byte(storedKey))
 
 	//_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionModel, dp.Model), dp.Modified, storedKey)
-	err = conn.Put(wo, []byte(CreateKey(DeviceProfileCollectionModel, dp.Model)+DBKeySeparator+string(dp.Modified)), []byte(storedKey))
+	err = conn.Put(wo, []byte(CreateKey(DeviceProfileCollectionModel, dp.Model)+string(dp.Modified)), []byte(storedKey))
 
 	for _, label := range dp.Labels {
 		//_ = conn.Send(ZADD, CreateKey(DeviceProfileCollectionLabel, label), dp.Modified, storedKey)
-		err = conn.Put(wo, []byte(CreateKey(DeviceProfileCollectionLabel, label)+DBKeySeparator+string(dp.Modified)), []byte(storedKey))
+		err = conn.Put(wo, []byte(CreateKey(DeviceProfileCollectionLabel, label)+string(dp.Modified)), []byte(storedKey))
 	}
 
 	return nil
@@ -149,12 +150,13 @@ func addDeviceProfile(conn *grocksdb.DB, dp models.DeviceProfile) (models.Device
 
 	edgeXerr = sendAddDeviceProfileCmd(conn, storedKey, dp)
 	if edgeXerr != nil {
+		edgeXerr = errors.NewCommonEdgeX(errors.KindDatabaseError, "device profile creation failed", edgeXerr)
 		return dp, errors.NewCommonEdgeXWrapper(edgeXerr)
 	}
 	//_, err := conn.Do(EXEC)
-	if err != nil {
-		edgeXerr = errors.NewCommonEdgeX(errors.KindDatabaseError, "device profile creation failed", err)
-	}
+	//if err != nil {
+	//	edgeXerr = errors.NewCommonEdgeX(errors.KindDatabaseError, "device profile creation failed", err)
+	//}
 
 	return dp, edgeXerr
 }
@@ -178,26 +180,35 @@ func deviceProfileByName(conn *grocksdb.DB, name string) (deviceProfile models.D
 }
 
 // sendDeleteDeviceProfileCmd send redis command for deleting device profile
-func sendDeleteDeviceProfileCmd(conn *grocksdb.DB, storedKey string, dp models.DeviceProfile) {
-	_ = conn.Send(DEL, storedKey)
+func sendDeleteDeviceProfileCmd(conn *grocksdb.DB, storedKey string, dp models.DeviceProfile) errors.EdgeX {
+	//_ = conn.Send(DEL, storedKey)
 	err := conn.Delete(wo, []byte(storedKey))
 	errString2 := "undeleted deviceprofile"
 	if err != nil {
 		log.Println(err, errString2)
 	}
-	_ = conn.Send(ZREM, DeviceProfileCollection, storedKey)
-	_ = conn.Send(HDEL, DeviceProfileCollectionName, dp.Name)
-	_ = conn.Send(ZREM, CreateKey(DeviceProfileCollectionManufacturer, dp.Manufacturer), storedKey)
-	_ = conn.Send(ZREM, CreateKey(DeviceProfileCollectionModel, dp.Model), storedKey)
+	//_ = conn.Send(ZREM, DeviceProfileCollection, storedKey)
+	//_ = conn.Send(HDEL, DeviceProfileCollectionName, dp.Name)
+	err = conn.Delete(wo, []byte(DeviceProfileCollectionName+DBKeySeparator+dp.Name)
+
+	//_ = conn.Send(ZREM, CreateKey(DeviceProfileCollectionManufacturer, dp.Manufacturer), storedKey)
+	err = conn.Delete(wo, []byte(CreateKey(DeviceProfileCollectionManufacturer, dp.Manufacturer)+string(dp.Modified)))
+
+	//_ = conn.Send(ZREM, CreateKey(DeviceProfileCollectionModel, dp.Model), storedKey)
+	err = conn.Delete(wo, []byte(CreateKey(DeviceProfileCollectionModel, dp.Model)+string(dp.Modified)))
+
 	for _, label := range dp.Labels {
-		_ = conn.Send(ZREM, CreateKey(DeviceProfileCollectionLabel, label), storedKey)
+		//_ = conn.Send(ZREM, CreateKey(DeviceProfileCollectionLabel, label), storedKey)
+		err = conn.Delete(wo, []byte(CreateKey(DeviceProfileCollectionLabel, label)+string(dp.Modified)))
 	}
+
+	return nil
 }
 
 func deleteDeviceProfile(conn *grocksdb.DB, dp models.DeviceProfile) errors.EdgeX {
 	storedKey := deviceProfileStoredKey(dp.Id)
 
-	sendDeleteDeviceProfileCmd(conn, storedKey, dp)
+	err := sendDeleteDeviceProfileCmd(conn, storedKey, dp)
 
 	if err != nil {
 		return errors.NewCommonEdgeX(errors.KindDatabaseError, "device profile deletion failed", err)
@@ -226,7 +237,7 @@ func updateDeviceProfile(conn *grocksdb.DB, dp models.DeviceProfile) (edgeXerr e
 
 	storedKey := deviceProfileStoredKey(dp.Id)
 
-	sendDeleteDeviceProfileCmd(conn, storedKey, oldDeviceProfile)
+	err := sendDeleteDeviceProfileCmd(conn, storedKey, oldDeviceProfile)
 	edgeXerr = sendAddDeviceProfileCmd(conn, storedKey, dp)
 	if edgeXerr != nil {
 		return errors.NewCommonEdgeXWrapper(edgeXerr)

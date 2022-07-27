@@ -97,20 +97,55 @@ func getObjectsBySomeRange(conn *grocksdb.DB, command string, key string, offset
 	if limit == -1 { //-1 limit means that clients want to retrieve all remaining records after offset from DB, so specifying -1 for end
 		end = limit
 	}
-	count, _ := redis.Int(conn.Do(ZCOUNT, key, InfiniteMin, InfiniteMax))
-	if count == 0 { // return nil slice when there is no records in the DB
+
+	ro.SetFillCache(false)
+	var count_key = 0
+	var arrKey [][]byte
+
+	it := conn.NewIterator(ro)
+	defer it.Close()
+
+	it.Seek([]byte(key))
+	if it.Valid() == false {
 		return nil, nil
-	} else if count > 0 && start > count { // return RangeNotSatisfiable error when start is out of range
-		return nil, errors.NewCommonEdgeX(errors.KindRangeNotSatisfiable, fmt.Sprintf("query objects bounds out of range. length:%v", count), nil)
-	}
-	ids, err := redis.Values(conn.Do(command, key, start, end))
-	if err == redis.ErrNil {
-		return nil, errors.NewCommonEdgeX(errors.KindEntityDoesNotExist, fmt.Sprintf("objects under %s do not exist", key), err)
-	} else if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindDatabaseError, "query object ids from database failed", err)
 	}
 
-	return getObjectsByIds(conn, ids)
+	var keytoseek *grocksdb.Slice
+	for it = it; it.Valid(); it.Next() {
+		keytoseek = it.Key()
+		if keytoseek != nil {
+			count_key += 1
+		}
+	}
+	defer keytoseek.Free()
+	if count_key > 0 && start > count_key { // return RangeNotSatisfiable error when start is out of range
+		return nil, errors.NewCommonEdgeX(errors.KindRangeNotSatisfiable, fmt.Sprintf("query objects bounds out of range. length:%v", count), nil)
+	}
+
+	for it = it; it.Valid(); it.Next() {
+		key := it.Key()
+		value := it.Value()
+		arrKey = append(arrKey, value.Data())
+		fmt.Printf("Key: %v Value: %v\n", key.Data(), value.Data())
+		key.Free()
+		value.Free()
+	}
+
+	//count, _ := redis.Int(conn.Do(ZCOUNT, key, InfiniteMin, InfiniteMax))
+	//if count == 0 { // return nil slice when there is no records in the DB
+	//	return nil, nil
+	//} else if count > 0 && start > count { // return RangeNotSatisfiable error when start is out of range
+	//	return nil, errors.NewCommonEdgeX(errors.KindRangeNotSatisfiable, fmt.Sprintf("query objects bounds out of range. length:%v", count), nil)
+	//}
+
+	//ids, err := redis.Values(conn.Do(command, key, start, end))
+	if it.Err() != nil {
+		return nil, errors.NewCommonEdgeX(errors.KindDatabaseError, "query object ids from database failed", it.Err())
+	} else {
+		return arrKey, nil
+	}
+
+	//return getObjectsByIds(conn, ids)
 }
 
 // getObjectsByScoreRange query objects by specified key's score range, offset, and limit.  Note that the specified key must be a sorted set.
@@ -193,7 +228,8 @@ func getObjectsByIds(conn *grocksdb.DB, ids []interface{}) ([][]byte, errors.Edg
 
 // objectNameExists checks whether the object name exists or not in the specified hashKey
 func objectNameExists(conn *grocksdb.DB, hashKey string, name string) (bool, errors.EdgeX) {
-	exists, err := redis.Bool(conn.Do(HEXISTS, hashKey, name))
+	// exists, err := redis.Bool(conn.Do(HEXISTS, hashKey, name))
+	exists, err := Bool(conn.Get(ro, []byte(hashKey+DBKeySeparator+name)))
 	if err != nil {
 		return false, errors.NewCommonEdgeX(errors.KindDatabaseError, "object name existence check failed", err)
 	}
